@@ -333,6 +333,7 @@ Este projeto está sob a licença MIT.
 
 ## 👨‍💻 Autor
 
+**Pedro Vinícios**
 Desenvolvido para o desafio **MVP Back-End Development** - Unidade 1
 
 **Situação-Problema:** Circuito Terê Verde - Turismo ecológico em Teresópolis

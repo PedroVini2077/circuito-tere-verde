@@ -38,6 +38,7 @@ Toda a documentação está em `backend/docs/`:
 
 ## 👨‍💻 Desenvolvedor
 
+**Pedro Vínicios**
 MVP desenvolvido para o desafio Back-End Development - Unidade 1
 
 ---
