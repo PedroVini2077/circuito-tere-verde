@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circuito Terê Verde - Turismo Ecológico</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2d6a4f;
+            --primary-dark: #1b4332;
+            --secondary: #52b788;
+            --accent: #74c69d;
+            --light: #d8f3dc;
+            --dark: #081c15;
+            --white: #ffffff;
+            --gray: #6c757d;
+            --danger: #dc3545;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--light) 0%, var(--white) 100%);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: var(--white);
+            padding: 1.5rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-buttons button {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: var(--white);
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            margin-left: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .nav-buttons button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card h2 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid var(--light);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--secondary);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(45, 106, 79, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: var(--white);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: var(--white);
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            margin-right: 0.5rem;
+        }
+
+        /* Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .item-card {
+            background: var(--white);
+            border: 2px solid var(--light);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .item-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            border-color: var(--secondary);
+        }
+
+        .item-card h3 {
+            color: var(--primary);
+            margin-bottom: 0.8rem;
+        }
+
+        .item-card p {
+            color: var(--gray);
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-right: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .badge-success {
+            background: var(--accent);
+            color: var(--dark);
+        }
+
+        .badge-warning {
+            background: #ffc107;
+            color: var(--dark);
+        }
+
+        .badge-danger {
+            background: var(--danger);
+            color: var(--white);
+        }
+
+        .badge-info {
+            background: #17a2b8;
+            color: var(--white);
+        }
+
+        /* Alert */
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            animation: slideIn 0.3s;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
+        }
+
+        .alert-success {
+            background: var(--accent);
+            color: var(--dark);
+            border-left: 4px solid var(--secondary);
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid var(--danger);
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--gray);
+        }
+
+        .spinner {
+            border: 3px solid var(--light);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Hide class */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Welcome Section */
+        .welcome {
+            text-align: center;
+            padding: 3rem 0;
+        }
+
+        .welcome h1 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .welcome p {
+            font-size: 1.2rem;
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: var(--white);
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card p {
+            opacity: 0.9;
+        }
+
+        /* Form Grid */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .form-grid-full {
+            grid-column: 1 / -1;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                🌿 Circuito Terê Verde
+            </div>
+            <div class="nav-buttons">
+                <button onclick="showPublicView()" id="btnPublic">Ver Trilhas</button>
+                <button onclick="showLogin()" id="btnLogin">Login Admin</button>
+                <button onclick="logout()" id="btnLogout" class="hidden">Sair</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Mensagens -->
+        <div id="alertContainer"></div>
+
+        <!-- View: Welcome/Public -->
+        <div id="publicView">
+            <div class="welcome">
+                <h1>🌿 Bem-vindo ao Circuito Terê Verde</h1>
+                <p>Explore as trilhas ecológicas e eventos naturais de Teresópolis/RJ</p>
+            </div>
+
+            <!-- Trilhas Públicas -->
+            <div class="card">
+                <h2>🥾 Trilhas Disponíveis</h2>
+                <div id="publicTrilhas" class="grid">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Carregando trilhas...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Eventos Públicos -->
+            <div class="card">
+                <h2>🎪 Próximos Eventos</h2>
+                <div id="publicEventos" class="grid">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Carregando eventos...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- View: Login -->
+        <div id="loginView" class="hidden">
+            <div class="card" style="max-width: 500px; margin: 3rem auto;">
+                <h2>🔐 Login Administrativo</h2>
+                <form onsubmit="login(event)">
+                    <div class="form-group">
+                        <label>Email:</label>
+                        <input type="email" id="loginEmail" value="admin@tereverde.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Senha:</label>
+                        <input type="password" id="loginSenha" value="admin123" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Entrar</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- View: Admin Dashboard -->
+        <div id="adminView" class="hidden">
+            <div class="card">
+                <h2>👨‍💼 Dashboard Administrativo</h2>
+                <p>Bem-vindo, <strong id="adminName"></strong>!</p>
+                
+                <div class="stats">
+                    <div class="stat-card">
+                        <h3 id="statTrilhas">0</h3>
+                        <p>Trilhas Cadastradas</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="statEventos">0</h3>
+                        <p>Eventos Ativos</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gerenciar Trilhas -->
+            <div class="card">
+                <h2>🥾 Gerenciar Trilhas</h2>
+                <button class="btn btn-primary" onclick="showCreateTrilha()">+ Nova Trilha</button>
+                
+                <div id="formCreateTrilha" class="hidden" style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 2px solid var(--light);">
+                    <h3>Criar Nova Trilha</h3>
+                    <form onsubmit="createTrilha(event)">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Nome da Trilha:</label>
+                                <input type="text" id="trilhaNome" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Dificuldade:</label>
+                                <select id="trilhaDificuldade" required>
+                                    <option value="fácil">Fácil</option>
+                                    <option value="moderada">Moderada</option>
+                                    <option value="difícil">Difícil</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Distância (km):</label>
+                                <input type="number" id="trilhaDistancia" step="0.1" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Duração:</label>
+                                <input type="text" id="trilhaDuracao" placeholder="Ex: 4 horas" required>
+                            </div>
+                            <div class="form-group form-grid-full">
+                                <label>Descrição:</label>
+                                <textarea id="trilhaDescricao" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Localização:</label>
+                                <input type="text" id="trilhaLocalizacao" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Capacidade Máxima:</label>
+                                <input type="number" id="trilhaCapacidade" value="50" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Horário Abertura:</label>
+                                <input type="time" id="trilhaAbertura" value="08:00" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Horário Fechamento:</label>
+                                <input type="time" id="trilhaFechamento" value="17:00" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Criar Trilha</button>
+                        <button type="button" class="btn btn-secondary" onclick="hideCreateTrilha()">Cancelar</button>
+                    </form>
+                </div>
+
+                <div id="adminTrilhas" class="grid" style="margin-top: 1.5rem;">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Carregando...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gerenciar Eventos -->
+            <div class="card">
+                <h2>🎪 Gerenciar Eventos</h2>
+                <button class="btn btn-primary" onclick="showCreateEvento()">+ Novo Evento</button>
+                
+                <div id="formCreateEvento" class="hidden" style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 2px solid var(--light);">
+                    <h3>Criar Novo Evento</h3>
+                    <form onsubmit="createEvento(event)">
+                        <div class="form-grid">
+                            <div class="form-group form-grid-full">
+                                <label>Título do Evento:</label>
+                                <input type="text" id="eventoTitulo" required>
+                            </div>
+                            <div class="form-group form-grid-full">
+                                <label>Descrição:</label>
+                                <textarea id="eventoDescricao" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Data Início:</label>
+                                <input type="date" id="eventoDataInicio" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Data Fim:</label>
+                                <input type="date" id="eventoDataFim" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Horário:</label>
+                                <input type="text" id="eventoHorario" placeholder="Ex: 09:00 - 13:00" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Local:</label>
+                                <input type="text" id="eventoLocal" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Tipo:</label>
+                                <select id="eventoTipo" required>
+                                    <option value="palestra">Palestra</option>
+                                    <option value="workshop">Workshop</option>
+                                    <option value="trilha guiada">Trilha Guiada</option>
+                                    <option value="observação">Observação</option>
+                                    <option value="outro">Outro</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Capacidade:</label>
+                                <input type="number" id="eventoCapacidade" value="30" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Criar Evento</button>
+                        <button type="button" class="btn btn-secondary" onclick="hideCreateEvento()">Cancelar</button>
+                    </form>
+                </div>
+
+                <div id="adminEventos" class="grid" style="margin-top: 1.5rem;">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Carregando...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:5000/api';
+        let token = localStorage.getItem('token');
+        let userData = null;
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', () => {
+            if (token) {
+                checkAuth();
+            } else {
+                showPublicView();
+            }
+        });
+
+        // Autenticação
+        async function login(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const senha = document.getElementById('loginSenha').value;
+
+            try {
+                const response = await fetch(`${API_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, senha })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    token = data.data.token;
+                    userData = data.data;
+                    localStorage.setItem('token', token);
+                    showAlert('Login realizado com sucesso!', 'success');
+                    showAdminView();
+                } else {
+                    showAlert(data.message || 'Erro ao fazer login', 'error');
+                }
+            } catch (error) {
+                showAlert('Erro ao conectar com o servidor', 'error');
+            }
+        }
+
+        async function checkAuth() {
+            try {
+                const response = await fetch(`${API_URL}/auth/me`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                const data = await response.json();
+
+                if (data.success && data.data.role === 'admin') {
+                    userData = data.data;
+                    showAdminView();
+                } else {
+                    logout();
+                }
+            } catch (error) {
+                logout();
+            }
+        }
+
+        function logout() {
+            token = null;
+            userData = null;
+            localStorage.removeItem('token');
+            showPublicView();
+            showAlert('Logout realizado com sucesso', 'success');
+        }
+
+        // Views
+        function showPublicView() {
+            document.getElementById('publicView').classList.remove('hidden');
+            document.getElementById('loginView').classList.add('hidden');
+            document.getElementById('adminView').classList.add('hidden');
+            document.getElementById('btnPublic').style.display = 'inline-block';
+            document.getElementById('btnLogin').style.display = 'inline-block';
+            document.getElementById('btnLogout').classList.add('hidden');
+            loadPublicTrilhas();
+            loadPublicEventos();
+        }
+
+        function showLogin() {
+            document.getElementById('publicView').classList.add('hidden');
+            document.getElementById('loginView').classList.remove('hidden');
+            document.getElementById('adminView').classList.add('hidden');
+        }
+
+        function showAdminView() {
+            document.getElementById('publicView').classList.add('hidden');
+            document.getElementById('loginView').classList.add('hidden');
+            document.getElementById('adminView').classList.remove('hidden');
+            document.getElementById('btnPublic').style.display = 'none';
+            document.getElementById('btnLogin').style.display = 'none';
+            document.getElementById('btnLogout').classList.remove('hidden');
+            document.getElementById('adminName').textContent = userData.nome;
+            loadAdminTrilhas();
+            loadAdminEventos();
+            updateStats();
+        }
+
+        // Alerts
+        function showAlert(message, type) {
+            const container = document.getElementById('alertContainer');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            container.appendChild(alert);
+            setTimeout(() => alert.remove(), 5000);
+        }
+
+        // Trilhas Públicas
+        async function loadPublicTrilhas() {
+            try {
+                const response = await fetch(`${API_URL}/trilhas`);
+                const data = await response.json();
+
+                const container = document.getElementById('publicTrilhas');
+                
+                if (data.success && data.data.length > 0) {
+                    container.innerHTML = data.data.map(trilha => `
+                        <div class="item-card">
+                            <h3>${trilha.nome}</h3>
+                            <p>${trilha.descricao}</p>
+                            <p><strong>📍</strong> ${trilha.localizacao}</p>
+                            <p><strong>📏</strong> ${trilha.distancia} km | <strong>⏱️</strong> ${trilha.duracao}</p>
+                            <p><strong>🕐</strong> ${trilha.horarioFuncionamento.abertura} - ${trilha.horarioFuncionamento.fechamento}</p>
+                            <span class="badge ${trilha.dificuldade === 'fácil' ? 'badge-success' : trilha.dificuldade === 'moderada' ? 'badge-warning' : 'badge-danger'}">${trilha.dificuldade}</span>
+                            <span class="badge ${trilha.disponivel ? 'badge-success' : 'badge-danger'}">${trilha.disponivel ? 'Aberta' : 'Fechada'}</span>
+                        </div>
+                    `).join('');
+                } else {
+                    container.innerHTML = '<p>Nenhuma trilha encontrada.</p>';
+                }
+            } catch (error) {
+                document.getElementById('publicTrilhas').innerHTML = '<p>Erro ao carregar trilhas.</p>';
+            }
+        }
+
+        // Eventos Públicos
+        async function loadPublicEventos() {
+            try {
+                const response = await fetch(`${API_URL}/eventos?ativo=true`);
+                const data = await response.json();
+
+                const container = document.getElementById('publicEventos');
+                
+                if (data.success && data.data.length > 0) {
+                    container.innerHTML = data.data.map(evento => `
+                        <div class="item-card">
+                            <h3>${evento.titulo}</h3>
+                            <p>${evento.descricao}</p>
+                            <p><strong>📍</strong> ${evento.local}</p>
+                            <p><strong>📅</strong> ${new Date(evento.dataInicio).toLocaleDateString('pt-BR')} - ${new Date(evento.dataFim).toLocaleDateString('pt-BR')}</p>
+                            <p><strong>🕐</strong> ${evento.horario}</p>
+                            <p><strong>👥</strong> ${evento.vagasDisponiveis}/${evento.capacidade} vagas</p>
+                            <span class="badge badge-info">${evento.tipo}</span>
+                        </div>
+                    `).join('');
+                } else {
+                    container.innerHTML = '<p>Nenhum evento encontrado.</p>';
+                }
+            } catch (error) {
+                document.getElementById('publicEventos').innerHTML = '<p>Erro ao carregar eventos.</p>';
+            }
+        }
+
+        // Admin - Trilhas
+        async function loadAdminTrilhas() {
+            try {
+                const response = await fetch(`${API_URL}/trilhas`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+
+                const container = document.getElementById('adminTrilhas');
+                
+                if (data.success && data.data.length > 0) {
+                    container.innerHTML = data.data.map(trilha => `
+                        <div class="item-card">
+                            <h3>${trilha.nome}</h3>
+                            <p>${trilha.descricao.substring(0, 100)}...</p>
+                            <span class="badge ${trilha.dificuldade === 'fácil' ? 'badge-success' : trilha.dificuldade === 'moderada' ? 'badge-warning' : 'badge-danger'}">${trilha.dificuldade}</span>
+                            <span class="badge ${trilha.disponivel ? 'badge-success' : 'badge-danger'}">${trilha.disponivel ? 'Aberta' : 'Fechada'}</span>
+                            <div style="margin-top: 1rem;">
+                                <button class="btn btn-small btn-secondary" onclick="toggleDisponibilidade('${trilha._id}', ${!trilha.disponivel})">${trilha.disponivel ? 'Fechar' : 'Abrir'}</button>
+                                <button class="btn btn-small btn-danger" onclick="deleteTrilha('${trilha._id}')">Deletar</button>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    container.innerHTML = '<p>Nenhuma trilha cadastrada.</p>';
+                }
+            } catch (error) {
+                document.getElementById('adminTrilhas').innerHTML = '<p>Erro ao carregar trilhas.</p>';
+            }
+        }
+
+        function showCreateTrilha() {
+            document.getElementById('formCreateTrilha').classList.remove('hidden');
+        }
+
+        function hideCreateTrilha() {
+            document.getElementById('formCreateTrilha').classList.add('hidden');
+            document.getElementById('formCreateTrilha').querySelector('form').reset();
+        }
+
+        async function createTrilha(e) {
+            e.preventDefault();
+
+            const trilhaData = {
+                nome: document.getElementById('trilhaNome').value,
+                descricao: document.getElementById('trilhaDescricao').value,
+                dificuldade: document.getElementById('trilhaDificuldade').value,
+                distancia: parseFloat(document.getElementById('trilhaDistancia').value),
+                duracao: document.getElementById('trilhaDuracao').value,
+                localizacao: document.getElementById('trilhaLocalizacao').value,
+                capacidadeMaxima: parseInt(document.getElementById('trilhaCapacidade').value),
+                horarioFuncionamento: {
+                    abertura: document.getElementById('trilhaAbertura').value,
+                    fechamento: document.getElementById('trilhaFechamento').value
+                }
+            };
+
+            try {
+                const response = await fetch(`${API_URL}/trilhas`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(trilhaData)
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showAlert('Trilha criada com sucesso!', 'success');
+                    hideCreateTrilha();
+                    loadAdminTrilhas();
+                    updateStats();
+                } else {
+                    showAlert(data.message || 'Erro ao criar trilha', 'error');
+                }
+            } catch (error) {
+                showAlert('Erro ao conectar com o servidor', 'error');
+            }
+        }
+
+        async function toggleDisponibilidade(id, disponivel) {
+            try {
+                const response = await fetch(`${API_URL}/trilhas/${id}/disponibilidade`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ disponivel })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showAlert(`Trilha ${disponivel ? 'aberta' : 'fechada'} com sucesso!`, 'success');
+                    loadAdminTrilhas();
+                } else {
+                    showAlert(data.message || 'Erro ao atualizar disponibilidade', 'error');
+                }
+            } catch (error) {
+                showAlert('Erro ao conectar com o servidor', 'error');
+            }
+        }
+
+        async function deleteTrilha(id) {
+            if (!confirm('Tem certeza que deseja deletar esta trilha?')) return;
+
+            try {
+                const response = await fetch(`${API_URL}/trilhas/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showAlert('Trilha deletada com sucesso!', 'success');
+                    loadAdminTrilhas();
+                    updateStats();
+                } else {
+                    showAlert(data.message || 'Erro ao deletar trilha', 'error');
+                }
+            } catch (error) {
+                showAlert('Erro ao conectar com o servidor', 'error');
+            }
+        }
+
+        // Admin - Eventos
+        async function loadAdminEventos() {
+            try {
+                const response = await fetch(`${API_URL}/eventos`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+
+                const container = document.getElementById('adminEventos');
+                
+                if (data.success && data.data.length > 0) {
+                    container.innerHTML = data.data.map(evento => `
+                        <div class="item-card">
+                            <h3>${evento.titulo}</h3>
+                            <p>${evento.descricao.substring(0, 100)}...</p>
+                            <p><strong>📅</strong> ${new Date(evento.dataInicio).toLocaleDateString('pt-BR')}</p>
+                            <p><strong>👥</strong> ${evento.vagasDisponiveis}/${evento.capacidade} vagas</p>
+                            <span class="badge badge-info">${evento.tipo}</span>
+                            <span class="badge ${evento.ativo ? 'badge-success' : 'badge-danger'}">${evento.ativo ? 'Ativo' : 'Inativo'}</span>
+                            <div style="margin-top: 1rem;">
+                                <button class="btn btn-small btn-secondary" onclick="toggleStatusEvento('${evento._id}', ${!evento.ativo})">${evento.ativo ? 'Desativar' : 'Ativar'}</button>
+                                <button class="btn btn-small btn-danger" onclick="deleteEvento('${evento._id}')">Deletar</button>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    container.innerHTML = '<p>Nenhum evento cadastrado.</p>';
+                }
+            } catch (error) {
+                document.getElementById('adminEventos').innerHTML = '<p>Erro ao carregar eventos.</p>';
+            }
+        }
+
+        function showCreateEvento() {
+            document.getElementById('formCreateEvento').classList.remove('hidden');
+        }
+
+        function hideCreateEvento() {
+            document.getElementById('formCreateEvento').classList.add('hidden');
+            document.getElementById('formCreateEvento').querySelector('form').reset();
+        }
+
+        async function createEvento(e) {
+            e.preventDefault();
+
+            const eventoData = {
+                titulo: document.getElementById('eventoTitulo').value,
+                descricao: document.getElementById('eventoDescricao').value,
+                dataInicio: document.getElementById('eventoDataInicio').value,
+                dataFim: document.getElementById('eventoDataFim').value,
+                horario: document.getElementById('eventoHorario').value,
+                local: document.getElementById('eventoLocal').value,
+                tipo: document.getElementById('eventoTipo').value,
+                capacidade: parseInt(document.getElementById('eventoCapacidade').value)
+            };
+
+            try {
+                const response = await fetch(`${API_URL}/eventos`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(eventoData)
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showAlert('Evento criado com sucesso!', 'success');
+                    hideCreateEvento();
+                    loadAdminEventos();
+                    updateStats();
+                } else {
+                    showAlert(data.message || 'Erro ao criar evento', 'error');
+                }
+            } catch (error) {
+                showAlert('Erro ao conectar com o servidor', 'error');
+            }
+        }
+
+        async function toggleStatusEvento(id, ativo) {
+            try {
+                const response = await fetch(`${API_URL}/eventos/${id}/status`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ ativo })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showAlert(`Evento ${ativo ? 'ativado' : 'desativado'} com sucesso!`, 'success');
+                    loadAdminEventos();
+                } else {
+                    showAlert(data.message || 'Erro ao atualizar status', 'error');
+                }
+            } catch (error) {
+                showAlert('Erro ao conectar com o servidor', 'error');
+            }
+        }
+
+        async function deleteEvento(id) {
+            if (!confirm('Tem certeza que deseja deletar este evento?')) return;
+
+            try {
+                const response = await fetch(`${API_URL}/eventos/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showAlert('Evento deletado com sucesso!', 'success');
+                    loadAdminEventos();
+                    updateStats();
+                } else {
+                    showAlert(data.message || 'Erro ao deletar evento', 'error');
+                }
+            } catch (error) {
+                showAlert('Erro ao conectar com o servidor', 'error');
+            }
+        }
+
+        // Stats
+        async function updateStats() {
+            try {
+                const [trilhasRes, eventosRes] = await Promise.all([
+                    fetch(`${API_URL}/trilhas`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    }),
+                    fetch(`${API_URL}/eventos?ativo=true`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    })
+                ]);
+
+                const trilhasData = await trilhasRes.json();
+                const eventosData = await eventosRes.json();
+
+                document.getElementById('statTrilhas').textContent = trilhasData.count || 0;
+                document.getElementById('statEventos').textContent = eventosData.count || 0;
+            } catch (error) {
+                console.error('Erro ao atualizar estatísticas', error);
+            }
+        }
+    </script>
+</body>
+</html>
