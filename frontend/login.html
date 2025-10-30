@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Circuito Terê Verde</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo" onclick="window.location.href='index.html'" style="cursor:pointer">🌿 Circuito Terê Verde</div>
+            <div class="nav-buttons">
+                <button onclick="window.location.href='index.html'">Voltar</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div id="alertContainer"></div>
+
+        <div class="card" style="max-width: 500px; margin: 3rem auto;">
+            <h2>🔐 Entrar</h2>
+            <form onsubmit="login(event)">
+                <div class="form-group">
+                    <label>Email:</label>
+                    <input type="email" id="email" value="admin@tereverde.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Senha:</label>
+                    <input type="password" id="senha" value="admin123" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Entrar</button>
+            </form>
+            <p style="margin-top: 1rem; text-align: center;">
+                Não tem conta? <a href="cadastro.html" style="color: var(--primary); font-weight: bold;">Cadastrar</a>
+            </p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        async function login(e) {
+            e.preventDefault();
+
+            const credentials = {
+                email: document.getElementById('email').value,
+                senha: document.getElementById('senha').value
+            };
+
+            try {
+                const response = await fetch(`${API_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(credentials)
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    setToken(data.data.token);
+                    showAlert('Login realizado! Redirecionando...', 'success');
+                    
+                    setTimeout(() => {
+                        if (data.data.role === 'admin') {
+                            window.location.href = 'admin.html';
+                        } else {
+                            window.location.href = 'index.html';
+                        }
+                    }, 1500);
+                } else {
+                    showAlert(data.message || 'Credenciais inválidas', 'error');
+                }
+            } catch (error) {
+                showAlert('Erro ao conectar com o servidor', 'error');
+            }
+        }
+    </script>
+</body>
+</html>

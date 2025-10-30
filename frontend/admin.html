@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Circuito Terê Verde</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">🌿 Circuito Terê Verde - Admin</div>
+            <div class="nav-buttons">
+                <button onclick="window.location.href='index.html'">Ver Site</button>
+                <button onclick="logout()">Sair</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div id="alertContainer"></div>
+
+        <div class="card">
+            <h2>👨‍💼 Dashboard</h2>
+            <p>Bem-vindo, <strong id="adminName"></strong>!</p>
+            
+            <div class="stats">
+                <div class="stat-card">
+                    <h3 id="statTrilhas">0</h3>
+                    <p>Trilhas</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="statEventos">0</h3>
+                    <p>Eventos</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trilhas -->
+        <div class="card">
+            <h2>🥾 Gerenciar Trilhas</h2>
+            <button class="btn btn-primary" onclick="toggleForm('trilha')">+ Nova Trilha</button>
+            
+            <div id="formTrilha" class="hidden" style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 2px solid var(--light);">
+                <form onsubmit="createTrilha(event)">
+                    <div class="form-grid">
+                        <div class="form-group"><label>Nome:</label><input type="text" id="tNome" required></div>
+                        <div class="form-group"><label>Dificuldade:</label>
+                            <select id="tDificuldade" required>
+                                <option value="fácil">Fácil</option>
+                                <option value="moderada">Moderada</option>
+                                <option value="difícil">Difícil</option>
+                            </select>
+                        </div>
+                        <div class="form-group"><label>Distância (km):</label><input type="number" id="tDistancia" step="0.1" required></div>
+                        <div class="form-group"><label>Duração:</label><input type="text" id="tDuracao" required></div>
+                        <div class="form-group form-grid-full"><label>Descrição:</label><textarea id="tDescricao" required></textarea></div>
+                        <div class="form-group"><label>Localização:</label><input type="text" id="tLocalizacao" required></div>
+                        <div class="form-group"><label>Capacidade:</label><input type="number" id="tCapacidade" value="50" required></div>
+                        <div class="form-group"><label>Abertura:</label><input type="time" id="tAbertura" value="08:00" required></div>
+                        <div class="form-group"><label>Fechamento:</label><input type="time" id="tFechamento" value="17:00" required></div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Criar</button>
+                    <button type="button" class="btn btn-secondary" onclick="toggleForm('trilha')">Cancelar</button>
+                </form>
+            </div>
+
+            <div id="trilhas" class="grid" style="margin-top: 1.5rem;"></div>
+        </div>
+
+        <!-- Eventos -->
+        <div class="card">
+            <h2>🎪 Gerenciar Eventos</h2>
+            <button class="btn btn-primary" onclick="toggleForm('evento')">+ Novo Evento</button>
+            
+            <div id="formEvento" class="hidden" style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 2px solid var(--light);">
+                <form onsubmit="createEvento(event)">
+                    <div class="form-grid">
+                        <div class="form-group form-grid-full"><label>Título:</label><input type="text" id="eTitulo" required></div>
+                        <div class="form-group form-grid-full"><label>Descrição:</label><textarea id="eDescricao" required></textarea></div>
+                        <div class="form-group"><label>Data Início:</label><input type="date" id="eDataInicio" required></div>
+                        <div class="form-group"><label>Data Fim:</label><input type="date" id="eDataFim" required></div>
+                        <div class="form-group"><label>Horário:</label><input type="text" id="eHorario" placeholder="09:00 - 13:00" required></div>
+                        <div class="form-group"><label>Local:</label><input type="text" id="eLocal" required></div>
+                        <div class="form-group"><label>Tipo:</label>
+                            <select id="eTipo" required>
+                                <option value="palestra">Palestra</option>
+                                <option value="workshop">Workshop</option>
+                                <option value="trilha guiada">Trilha Guiada</option>
+                                <option value="observação">Observação</option>
+                                <option value="outro">Outro</option>
+                            </select>
+                        </div>
+                        <div class="form-group"><label>Capacidade:</label><input type="number" id="eCapacidade" value="30" required></div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Criar</button>
+                    <button type="button" class="btn btn-secondary" onclick="toggleForm('evento')">Cancelar</button>
+                </form>
+            </div>
+
+            <div id="eventos" class="grid" style="margin-top: 1.5rem;"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        let userData = null;
+
+        async function init() {
+            userData = await checkAuth();
+            if (!userData || userData.role !== 'admin') {
+                window.location.href = 'login.html';
+                return;
+            }
+            document.getElementById('adminName').textContent = userData.nome;
+            loadTrilhas();
+            loadEventos();
+            updateStats();
+        }
+
+        function toggleForm(type) {
+            const form = document.getElementById(`form${type.charAt(0).toUpperCase() + type.slice(1)}`);
+            form.classList.toggle('hidden');
+        }
+
+        function logout() {
+            clearAuth();
+            window.location.href = 'index.html';
+        }
+
+        async function loadTrilhas() {
+            const response = await fetch(`${API_URL}/trilhas`, {
+                headers: { 'Authorization': `Bearer ${getToken()}` }
+            });
+            const data = await response.json();
+            const container = document.getElementById('trilhas');
+            
+            if (data.success && data.data.length > 0) {
+                container.innerHTML = data.data.map(t => `
+                    <div class="item-card">
+                        <h3>${t.nome}</h3>
+                        <p>${t.descricao.substring(0, 100)}...</p>
+                        <span class="badge badge-${t.disponivel ? 'success' : 'danger'}">${t.disponivel ? 'Aberta' : 'Fechada'}</span>
+                        <div style="margin-top: 1rem;">
+                            <button class="btn btn-small btn-secondary" onclick="toggleDisp('${t._id}', ${!t.disponivel})">${t.disponivel ? 'Fechar' : 'Abrir'}</button>
+                            <button class="btn btn-small btn-danger" onclick="deleteTrilha('${t._id}')">Deletar</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        async function createTrilha(e) {
+            e.preventDefault();
+            const data = {
+                nome: document.getElementById('tNome').value,
+                descricao: document.getElementById('tDescricao').value,
+                dificuldade: document.getElementById('tDificuldade').value,
+                distancia: parseFloat(document.getElementById('tDistancia').value),
+                duracao: document.getElementById('tDuracao').value,
+                localizacao: document.getElementById('tLocalizacao').value,
+                capacidadeMaxima: parseInt(document.getElementById('tCapacidade').value),
+                horarioFuncionamento: {
+                    abertura: document.getElementById('tAbertura').value,
+                    fechamento: document.getElementById('tFechamento').value
+                }
+            };
+
+            const response = await fetch(`${API_URL}/trilhas`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${getToken()}`
+                },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                showAlert('Trilha criada!', 'success');
+                toggleForm('trilha');
+                loadTrilhas();
+                updateStats();
+            }
+        }
+
+        async function toggleDisp(id, disponivel) {
+            await fetch(`${API_URL}/trilhas/${id}/disponibilidade`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${getToken()}`
+                },
+                body: JSON.stringify({ disponivel })
+            });
+            loadTrilhas();
+        }
+
+        async function deleteTrilha(id) {
+            if (!confirm('Deletar trilha?')) return;
+            await fetch(`${API_URL}/trilhas/${id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${getToken()}` }
+            });
+            loadTrilhas();
+            updateStats();
+        }
+
+        async function loadEventos() {
+            const response = await fetch(`${API_URL}/eventos`, {
+                headers: { 'Authorization': `Bearer ${getToken()}` }
+            });
+            const data = await response.json();
+            const container = document.getElementById('eventos');
+            
+            if (data.success && data.data.length > 0) {
+                container.innerHTML = data.data.map(e => `
+                    <div class="item-card">
+                        <h3>${e.titulo}</h3>
+                        <p>${e.descricao.substring(0, 100)}...</p>
+                        <span class="badge badge-${e.ativo ? 'success' : 'danger'}">${e.ativo ? 'Ativo' : 'Inativo'}</span>
+                        <div style="margin-top: 1rem;">
+                            <button class="btn btn-small btn-secondary" onclick="toggleStatus('${e._id}', ${!e.ativo})">${e.ativo ? 'Desativar' : 'Ativar'}</button>
+                            <button class="btn btn-small btn-danger" onclick="deleteEvento('${e._id}')">Deletar</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        async function createEvento(e) {
+            e.preventDefault();
+            const data = {
+                titulo: document.getElementById('eTitulo').value,
+                descricao: document.getElementById('eDescricao').value,
+                dataInicio: document.getElementById('eDataInicio').value,
+                dataFim: document.getElementById('eDataFim').value,
+                horario: document.getElementById('eHorario').value,
+                local: document.getElementById('eLocal').value,
+                tipo: document.getElementById('eTipo').value,
+                capacidade: parseInt(document.getElementById('eCapacidade').value)
+            };
+
+            const response = await fetch(`${API_URL}/eventos`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${getToken()}`
+                },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                showAlert('Evento criado!', 'success');
+                toggleForm('evento');
+                loadEventos();
+                updateStats();
+            }
+        }
+
+        async function toggleStatus(id, ativo) {
+            await fetch(`${API_URL}/eventos/${id}/status`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${getToken()}`
+                },
+                body: JSON.stringify({ ativo })
+            });
+            loadEventos();
+        }
+
+        async function deleteEvento(id) {
+            if (!confirm('Deletar evento?')) return;
+            await fetch(`${API_URL}/eventos/${id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${getToken()}` }
+            });
+            loadEventos();
+            updateStats();
+        }
+
+        async function updateStats() {
+            const [t, e] = await Promise.all([
+                fetch(`${API_URL}/trilhas`, { headers: { 'Authorization': `Bearer ${getToken()}` }}),
+                fetch(`${API_URL}/eventos?ativo=true`, { headers: { 'Authorization': `Bearer ${getToken()}` }})
+            ]);
+            const trilhas = await t.json();
+            const eventos = await e.json();
+            document.getElementById('statTrilhas').textContent = trilhas.count || 0;
+            document.getElementById('statEventos').textContent = eventos.count || 0;
+        }
+
+        init();
+    </script>
+</body>
+</html>
