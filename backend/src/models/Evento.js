@@ -60,7 +60,7 @@ const eventoSchema = new mongoose.Schema(
 
 // Inicializar vagas disponíveis com a capacidade
 eventoSchema.pre('save', function (next) {
-  if (this.isNew) {
+  if (this.isNew && this.vagasDisponiveis === undefined) {
     this.vagasDisponiveis = this.capacidade;
   }
   next();

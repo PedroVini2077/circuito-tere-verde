@@ -38,26 +38,18 @@
         async function init() {
             const user = await checkAuth();
 
-        // Se NÃO estiver logado, redireciona para tela de boas-vindas
-        if (!user) {
-            window.location.href = 'index.html';
-            return;
-        }
-
-        const nav = document.getElementById('navButtons');
-            
-            if (user) {
-                nav.innerHTML = `
-                    <button onclick="window.location.href='perfil.html'">👤 Perfil</button>
-                    ${user.role === 'admin' ? '<button onclick="window.location.href=\'admin.html\'">⚙️ Admin</button>' : ''}
-                    <button onclick="logout()">Sair</button>
-                `;
-            } else {
-                nav.innerHTML = `
-                    <button onclick="window.location.href='cadastro.html'">Cadastrar</button>
-                    <button onclick="window.location.href='login.html'">Entrar</button>
-                `;
+            // Se NÃO estiver logado, redireciona para tela de boas-vindas
+            if (!user) {
+                window.location.href = 'index.html';
+                return;
             }
+
+            const nav = document.getElementById('navButtons');
+            nav.innerHTML = `
+                <button onclick="window.location.href='perfil.html'">👤 Perfil</button>
+                ${user.role === 'admin' ? '<button onclick="window.location.href=\'admin.html\'">⚙️ Admin</button>' : ''}
+                <button onclick="logout()">Sair</button>
+            `;
             
             loadTrilhas();
             loadEventos();
@@ -65,7 +57,7 @@
 
         function logout() {
             clearAuth();
-            window.location.reload();
+            window.location.href = 'index.html';
         }
 
         async function loadTrilhas() {
@@ -80,6 +72,7 @@
                         <p>${t.descricao}</p>
                         <p><strong>📍</strong> ${t.localizacao}</p>
                         <p><strong>📏</strong> ${t.distancia} km | ⏱️ ${t.duracao}</p>
+                        <p><strong>👥</strong> Capacidade: ${t.capacidadeMaxima} pessoas</p>
                         <span class="badge badge-${t.dificuldade === 'fácil' ? 'success' : t.dificuldade === 'moderada' ? 'warning' : 'danger'}">${t.dificuldade}</span>
                         <span class="badge badge-${t.disponivel ? 'success' : 'danger'}">${t.disponivel ? 'Aberta' : 'Fechada'}</span>
                     </div>
@@ -90,19 +83,28 @@
         async function loadEventos() {
             const response = await fetch(`${API_URL}/eventos?ativo=true`);
             const data = await response.json();
+
+            console.log('Eventos:', data.data);
+
             const container = document.getElementById('eventos');
             
             if (data.success && data.data.length > 0) {
-                container.innerHTML = data.data.map(e => `
-                    <div class="item-card">
-                        <h3>${e.titulo}</h3>
-                        <p>${e.descricao}</p>
-                        <p><strong>📍</strong> ${e.local}</p>
-                        <p><strong>📅</strong> ${new Date(e.dataInicio).toLocaleDateString('pt-BR')}</p>
-                        <p><strong>👥</strong> ${e.vagasDisponiveis || e.capacidade}/${e.capacidade} vagas</p>
-                        <span class="badge badge-info">${e.tipo}</span>
-                    </div>
-                `).join('');
+                container.innerHTML = data.data.map(e => {
+                    const inscritos = e.capacidade - (e.vagasDisponiveis || 0);
+                    const esgotado = e.vagasDisponiveis === 0;
+                    
+                    return `
+                        <div class="item-card">
+                            <h3>${e.titulo}</h3>
+                            <p>${e.descricao}</p>
+                            <p><strong>📍</strong> ${e.local}</p>
+                            <p><strong>📅</strong> ${new Date(e.dataInicio).toLocaleDateString('pt-BR')}</p>
+                            <p><strong>👥</strong> ${inscritos}/${e.capacidade} inscritos</p>
+                            <span class="badge badge-info">${e.tipo}</span>
+                            <span class="badge badge-${esgotado ? 'danger' : 'success'}">${esgotado ? 'Esgotado' : 'Vagas disponíveis'}</span>
+                        </div>
+                    `;
+                }).join('');
             }
         }
 
