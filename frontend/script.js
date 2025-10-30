@@ -1,4 +1,9 @@
-const API_URL = 'http://10.0.0.21:5000/api';
+// Detecta automaticamente se está no PC ou celular
+const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:5000/api'
+    : 'http://10.0.0.21:5000/api';
+
+console.log('🔗 API URL:', API_URL); // Para debug
 
 function getToken() {
     return localStorage.getItem('token');

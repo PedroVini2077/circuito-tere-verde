@@ -48,7 +48,12 @@ app.use(errorHandler);
 const PORT = process.env.PORT || 5000;
 
 const server = app.listen(PORT, () => {
-  console.log(`🚀 Servidor rodando em modo ${process.env.NODE_ENV} na porta ${PORT}`);
+  console.log(`\n🚀 Servidor Backend rodando na porta ${PORT}`);
+  console.log(`📡 API: http://localhost:${PORT}/api`);
+  console.log(`\n🌐 Para acessar o SITE:`);
+  console.log(`💻 PC: http://localhost:8080`);
+  console.log(`📱 Mobile: http://10.0.0.21:8080`);
+  console.log(`\n💡 Lembre-se de rodar o frontend com: npx http-server -p 8080 -a 0.0.0.0\n`);
 });
 
 // Tratamento de erros não capturados
