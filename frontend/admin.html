@@ -74,6 +74,39 @@
                 </form>
             </div>
 
+            <div id="formEditTrilha" class="hidden"
+                style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 2px solid var(--light);">
+                <h3>Editar Trilha</h3>
+                <form onsubmit="updateTrilha(event)">
+                    <input type="hidden" id="editTrilhaId">
+                    <div class="form-grid">
+                        <div class="form-group"><label>Nome:</label><input type="text" id="etNome" required></div>
+                        <div class="form-group"><label>Dificuldade:</label>
+                            <select id="etDificuldade" required>
+                                <option value="fácil">Fácil</option>
+                                <option value="moderada">Moderada</option>
+                                <option value="difícil">Difícil</option>
+                            </select>
+                        </div>
+                        <div class="form-group"><label>Distância (km):</label><input type="number" id="etDistancia"
+                                step="0.1" required></div>
+                        <div class="form-group"><label>Duração:</label><input type="text" id="etDuracao" required></div>
+                        <div class="form-group form-grid-full"><label>Descrição:</label><textarea id="etDescricao"
+                                required></textarea></div>
+                        <div class="form-group"><label>Localização:</label><input type="text" id="etLocalizacao"
+                                required></div>
+                        <div class="form-group"><label>Capacidade:</label><input type="number" id="etCapacidade"
+                                required></div>
+                        <div class="form-group"><label>Abertura:</label><input type="time" id="etAbertura" required>
+                        </div>
+                        <div class="form-group"><label>Fechamento:</label><input type="time" id="etFechamento" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                    <button type="button" class="btn btn-secondary" onclick="hideEditTrilha()">Cancelar</button>
+                </form>
+            </div>
+
             <div id="trilhas" class="grid" style="margin-top: 1.5rem;"></div>
         </div>
 
@@ -113,7 +146,45 @@
                 </form>
             </div>
 
+            <div id="formEditEvento" class="hidden"
+                style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 2px solid var(--light);">
+                <h3>Editar Evento</h3>
+                <form onsubmit="updateEvento(event)">
+                    <input type="hidden" id="editEventoId">
+                    <div class="form-grid">
+                        <div class="form-group form-grid-full"><label>Título:</label><input type="text" id="eeTitulo"
+                                required></div>
+                        <div class="form-group form-grid-full"><label>Descrição:</label><textarea id="eeDescricao"
+                                required></textarea></div>
+                        <div class="form-group"><label>Data Início:</label><input type="date" id="eeDataInicio"
+                                required></div>
+                        <div class="form-group"><label>Data Fim:</label><input type="date" id="eeDataFim" required>
+                        </div>
+                        <div class="form-group"><label>Horário:</label><input type="text" id="eeHorario" required></div>
+                        <div class="form-group"><label>Local:</label><input type="text" id="eeLocal" required></div>
+                        <div class="form-group"><label>Tipo:</label>
+                            <select id="eeTipo" required>
+                                <option value="palestra">Palestra</option>
+                                <option value="workshop">Workshop</option>
+                                <option value="trilha guiada">Trilha Guiada</option>
+                                <option value="observação">Observação</option>
+                                <option value="outro">Outro</option>
+                            </select>
+                        </div>
+                        <div class="form-group"><label>Capacidade:</label><input type="number" id="eeCapacidade"
+                                required></div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                    <button type="button" class="btn btn-secondary" onclick="hideEditEvento()">Cancelar</button>
+                </form>
+            </div>
+
             <div id="eventos" class="grid" style="margin-top: 1.5rem;"></div>
+        </div>
+        <!-- Gerenciar Usuários -->
+        <div class="card">
+            <h2>👥 Gerenciar Usuários</h2>
+            <div id="users" class="grid"></div>
         </div>
     </div>
 
@@ -158,13 +229,9 @@
                         <p>${t.descricao.substring(0, 100)}...</p>
                         <span class="badge badge-${t.disponivel ? 'success' : 'danger'}">${t.disponivel ? 'Aberta' : 'Fechada'}</span>
                         <div style="margin-top: 1rem;">
+                            <button class="btn btn-small btn-primary" onclick="editTrilha('${t._id}')">Editar</button>
                             <button class="btn btn-small btn-secondary" onclick="toggleDisp('${t._id}', ${!t.disponivel})">${t.disponivel ? 'Fechar' : 'Abrir'}</button>
                             <button class="btn btn-small btn-danger" onclick="deleteTrilha('${t._id}')">Deletar</button>
-                        </div>
-                        <!-- Gerenciar Usuários -->
-                            <div class="card">
-                            <h2>👥 Gerenciar Usuários</h2>
-                            <div id="users" class="grid"></div>
                         </div>
                     </div>
                 `).join('');
@@ -241,6 +308,7 @@
                         <p>${e.descricao.substring(0, 100)}...</p>
                         <span class="badge badge-${e.ativo ? 'success' : 'danger'}">${e.ativo ? 'Ativo' : 'Inativo'}</span>
                         <div style="margin-top: 1rem;">
+                            <button class="btn btn-small btn-primary" onclick="editEvento('${e._id}')">Editar</button>
                             <button class="btn btn-small btn-secondary" onclick="toggleStatus('${e._id}', ${!e.ativo})">${e.ativo ? 'Desativar' : 'Ativar'}</button>
                             <button class="btn btn-small btn-danger" onclick="deleteEvento('${e._id}')">Deletar</button>
                         </div>
@@ -277,6 +345,122 @@
                 toggleForm('evento');
                 loadEventos();
                 updateStats();
+            }
+        }
+
+        function hideEditTrilha() {
+            document.getElementById('formEditTrilha').classList.add('hidden');
+        }
+
+        function hideEditEvento() {
+            document.getElementById('formEditEvento').classList.add('hidden');
+        }
+
+        async function editTrilha(id) {
+            const response = await fetch(`${API_URL}/trilhas/${id}`, {
+                headers: { 'Authorization': `Bearer ${getToken()}` }
+            });
+            const data = await response.json();
+            const t = data.data;
+
+            document.getElementById('editTrilhaId').value = t._id;
+            document.getElementById('etNome').value = t.nome;
+            document.getElementById('etDificuldade').value = t.dificuldade;
+            document.getElementById('etDistancia').value = t.distancia;
+            document.getElementById('etDuracao').value = t.duracao;
+            document.getElementById('etDescricao').value = t.descricao;
+            document.getElementById('etLocalizacao').value = t.localizacao;
+            document.getElementById('etCapacidade').value = t.capacidadeMaxima;
+            document.getElementById('etAbertura').value = t.horarioFuncionamento.abertura;
+            document.getElementById('etFechamento').value = t.horarioFuncionamento.fechamento;
+
+            document.getElementById('formEditTrilha').classList.remove('hidden');
+            document.getElementById('formEditTrilha').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        async function updateTrilha(e) {
+            e.preventDefault();
+            const id = document.getElementById('editTrilhaId').value;
+            const data = {
+                nome: document.getElementById('etNome').value,
+                descricao: document.getElementById('etDescricao').value,
+                dificuldade: document.getElementById('etDificuldade').value,
+                distancia: parseFloat(document.getElementById('etDistancia').value),
+                duracao: document.getElementById('etDuracao').value,
+                localizacao: document.getElementById('etLocalizacao').value,
+                capacidadeMaxima: parseInt(document.getElementById('etCapacidade').value),
+                horarioFuncionamento: {
+                    abertura: document.getElementById('etAbertura').value,
+                    fechamento: document.getElementById('etFechamento').value
+                }
+            };
+
+            const response = await fetch(`${API_URL}/trilhas/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${getToken()}`
+                },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                showAlert('Trilha atualizada!', 'success');
+                hideEditTrilha();
+                loadTrilhas();
+            }
+        }
+
+        async function editEvento(id) {
+            const response = await fetch(`${API_URL}/eventos/${id}`, {
+                headers: { 'Authorization': `Bearer ${getToken()}` }
+            });
+            const data = await response.json();
+            const e = data.data;
+
+            document.getElementById('editEventoId').value = e._id;
+            document.getElementById('eeTitulo').value = e.titulo;
+            document.getElementById('eeDescricao').value = e.descricao;
+            document.getElementById('eeDataInicio').value = e.dataInicio.split('T')[0];
+            document.getElementById('eeDataFim').value = e.dataFim.split('T')[0];
+            document.getElementById('eeHorario').value = e.horario;
+            document.getElementById('eeLocal').value = e.local;
+            document.getElementById('eeTipo').value = e.tipo;
+            document.getElementById('eeCapacidade').value = e.capacidade;
+
+            document.getElementById('formEditEvento').classList.remove('hidden');
+            document.getElementById('formEditEvento').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        async function updateEvento(e) {
+            e.preventDefault();
+            const id = document.getElementById('editEventoId').value;
+            const data = {
+                titulo: document.getElementById('eeTitulo').value,
+                descricao: document.getElementById('eeDescricao').value,
+                dataInicio: document.getElementById('eeDataInicio').value,
+                dataFim: document.getElementById('eeDataFim').value,
+                horario: document.getElementById('eeHorario').value,
+                local: document.getElementById('eeLocal').value,
+                tipo: document.getElementById('eeTipo').value,
+                capacidade: parseInt(document.getElementById('eeCapacidade').value)
+            };
+
+            const response = await fetch(`${API_URL}/eventos/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${getToken()}`
+                },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                showAlert('Evento atualizado!', 'success');
+                hideEditEvento();
+                loadEventos();
             }
         }
 
@@ -319,7 +503,7 @@
             });
             const data = await response.json();
             const container = document.getElementById('users');
-            
+
             if (data.success && data.data.length > 0) {
                 container.innerHTML = data.data.map(u => `
                     <div class="item-card">
@@ -339,14 +523,14 @@
 
         async function deleteUser(id, role) {
             if (!confirm('Deletar este usuário?')) return;
-            
+
             const response = await fetch(`${API_URL}/users/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${getToken()}` }
             });
-            
+
             const data = await response.json();
-            
+
             if (data.success) {
                 showAlert('Usuário deletado!', 'success');
                 loadUsers();

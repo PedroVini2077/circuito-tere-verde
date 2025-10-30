@@ -5,101 +5,87 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Circuito Terê Verde</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        .welcome-screen {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            padding: 2rem;
+        }
+
+        .welcome-box {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 3rem;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: fadeInUp 0.6s;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .welcome-box .logo {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .welcome-box h1 {
+            color: var(--primary);
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .welcome-box p {
+            color: var(--gray);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .welcome-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .welcome-buttons .btn {
+            width: 100%;
+            font-size: 1.1rem;
+            padding: 1rem;
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <div class="header-content">
-            <div class="logo">🌿 Circuito Terê Verde</div>
-            <div class="nav-buttons" id="navButtons"></div>
-        </div>
-    </header>
-
-    <div class="container">
-        <div id="alertContainer"></div>
-
-        <div class="welcome">
-            <h1>🌿 Explore Teresópolis</h1>
-            <p>Trilhas ecológicas e eventos naturais</p>
-        </div>
-
-        <div class="card">
-            <h2>🥾 Trilhas Disponíveis</h2>
-            <div id="trilhas" class="grid"></div>
-        </div>
-
-        <div class="card">
-            <h2>🎪 Próximos Eventos</h2>
-            <div id="eventos" class="grid"></div>
+    <div class="welcome-screen">
+        <div class="welcome-box">
+            <div class="logo">🌿</div>
+            <h1>Bem-vindo ao Circuito Terê Verde</h1>
+            <p>Descubra as trilhas ecológicas e eventos naturais de Teresópolis/RJ</p>
+            <p style="font-size: 0.95rem;">Para acessar o site, faça login ou cadastre-se</p>
+            
+            <div class="welcome-buttons">
+                <button class="btn btn-primary" onclick="window.location.href='login.html'">🔐 Fazer Login</button>
+                <button class="btn btn-secondary" onclick="window.location.href='cadastro.html'">📝 Criar Conta</button>
+            </div>
         </div>
     </div>
 
     <script src="script.js"></script>
     <script>
-        async function init() {
+        // Se já estiver logado, redireciona direto pro site
+        async function checkAndRedirect() {
             const user = await checkAuth();
-            const nav = document.getElementById('navButtons');
-            
             if (user) {
-                nav.innerHTML = `
-                    <button onclick="window.location.href='perfil.html'">👤 Perfil</button>
-                    ${user.role === 'admin' ? '<button onclick="window.location.href=\'admin.html\'">⚙️ Admin</button>' : ''}
-                    <button onclick="logout()">Sair</button>
-                `;
-            } else {
-                nav.innerHTML = `
-                    <button onclick="window.location.href='cadastro.html'">Cadastrar</button>
-                    <button onclick="window.location.href='login.html'">Entrar</button>
-                `;
-            }
-            
-            loadTrilhas();
-            loadEventos();
-        }
-
-        function logout() {
-            clearAuth();
-            window.location.reload();
-        }
-
-        async function loadTrilhas() {
-            const response = await fetch(`${API_URL}/trilhas`);
-            const data = await response.json();
-            const container = document.getElementById('trilhas');
-            
-            if (data.success && data.data.length > 0) {
-                container.innerHTML = data.data.map(t => `
-                    <div class="item-card">
-                        <h3>${t.nome}</h3>
-                        <p>${t.descricao}</p>
-                        <p><strong>📍</strong> ${t.localizacao}</p>
-                        <p><strong>📏</strong> ${t.distancia} km | ⏱️ ${t.duracao}</p>
-                        <span class="badge badge-${t.dificuldade === 'fácil' ? 'success' : t.dificuldade === 'moderada' ? 'warning' : 'danger'}">${t.dificuldade}</span>
-                        <span class="badge badge-${t.disponivel ? 'success' : 'danger'}">${t.disponivel ? 'Aberta' : 'Fechada'}</span>
-                    </div>
-                `).join('');
+                window.location.href = 'home.html';
             }
         }
-
-        async function loadEventos() {
-            const response = await fetch(`${API_URL}/eventos?ativo=true`);
-            const data = await response.json();
-            const container = document.getElementById('eventos');
-            
-            if (data.success && data.data.length > 0) {
-                container.innerHTML = data.data.map(e => `
-                    <div class="item-card">
-                        <h3>${e.titulo}</h3>
-                        <p>${e.descricao}</p>
-                        <p><strong>📍</strong> ${e.local}</p>
-                        <p><strong>📅</strong> ${new Date(e.dataInicio).toLocaleDateString('pt-BR')}</p>
-                        <p><strong>👥</strong> ${e.vagasDisponiveis}/${e.capacidade} vagas</p>
-                        <span class="badge badge-info">${e.tipo}</span>
-                    </div>
-                `).join('');
-            }
-        }
-
-        init();
+        checkAndRedirect();
     </script>
 </body>
 </html>

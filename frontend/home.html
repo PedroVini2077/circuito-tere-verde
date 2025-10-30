@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circuito Terê Verde</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo" onclick="window.location.href='home.html'" style="cursor:pointer">🌿 Circuito Terê Verde</div>
+            <div class="nav-buttons" id="navButtons"></div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div id="alertContainer"></div>
+
+        <div class="welcome">
+            <h1>🌿 Explore Teresópolis</h1>
+            <p>Trilhas ecológicas e eventos naturais</p>
+        </div>
+
+        <div class="card">
+            <h2>🥾 Trilhas Disponíveis</h2>
+            <div id="trilhas" class="grid"></div>
+        </div>
+
+        <div class="card">
+            <h2>🎪 Próximos Eventos</h2>
+            <div id="eventos" class="grid"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        async function init() {
+            const user = await checkAuth();
+
+        // Se NÃO estiver logado, redireciona para tela de boas-vindas
+        if (!user) {
+            window.location.href = 'index.html';
+            return;
+        }
+
+        const nav = document.getElementById('navButtons');
+            
+            if (user) {
+                nav.innerHTML = `
+                    <button onclick="window.location.href='perfil.html'">👤 Perfil</button>
+                    ${user.role === 'admin' ? '<button onclick="window.location.href=\'admin.html\'">⚙️ Admin</button>' : ''}
+                    <button onclick="logout()">Sair</button>
+                `;
+            } else {
+                nav.innerHTML = `
+                    <button onclick="window.location.href='cadastro.html'">Cadastrar</button>
+                    <button onclick="window.location.href='login.html'">Entrar</button>
+                `;
+            }
+            
+            loadTrilhas();
+            loadEventos();
+        }
+
+        function logout() {
+            clearAuth();
+            window.location.reload();
+        }
+
+        async function loadTrilhas() {
+            const response = await fetch(`${API_URL}/trilhas`);
+            const data = await response.json();
+            const container = document.getElementById('trilhas');
+            
+            if (data.success && data.data.length > 0) {
+                container.innerHTML = data.data.map(t => `
+                    <div class="item-card">
+                        <h3>${t.nome}</h3>
+                        <p>${t.descricao}</p>
+                        <p><strong>📍</strong> ${t.localizacao}</p>
+                        <p><strong>📏</strong> ${t.distancia} km | ⏱️ ${t.duracao}</p>
+                        <span class="badge badge-${t.dificuldade === 'fácil' ? 'success' : t.dificuldade === 'moderada' ? 'warning' : 'danger'}">${t.dificuldade}</span>
+                        <span class="badge badge-${t.disponivel ? 'success' : 'danger'}">${t.disponivel ? 'Aberta' : 'Fechada'}</span>
+                    </div>
+                `).join('');
+            }
+        }
+
+        async function loadEventos() {
+            const response = await fetch(`${API_URL}/eventos?ativo=true`);
+            const data = await response.json();
+            const container = document.getElementById('eventos');
+            
+            if (data.success && data.data.length > 0) {
+                container.innerHTML = data.data.map(e => `
+                    <div class="item-card">
+                        <h3>${e.titulo}</h3>
+                        <p>${e.descricao}</p>
+                        <p><strong>📍</strong> ${e.local}</p>
+                        <p><strong>📅</strong> ${new Date(e.dataInicio).toLocaleDateString('pt-BR')}</p>
+                        <p><strong>👥</strong> ${e.vagasDisponiveis || e.capacidade}/${e.capacidade} vagas</p>
+                        <span class="badge badge-info">${e.tipo}</span>
+                    </div>
+                `).join('');
+            }
+        }
+
+        init();
+    </script>
+</body>
+</html>
