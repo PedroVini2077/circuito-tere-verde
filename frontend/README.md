@@ -319,6 +319,10 @@ home.html (Logado)
 - [ ] Dark mode
 - [ ] PWA (Progressive Web App)
 
+### Melhorias Conhecidas
+- [ ] Ajustar responsividade em telas pequenas
+- [ ] Otimizar layout mobile
+
 ---
 
 ## 🤝 Contribuindo
