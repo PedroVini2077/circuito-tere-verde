@@ -30,6 +30,10 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    superAdmin: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

@@ -10,10 +10,7 @@
     <header>
         <div class="header-content">
             <div class="logo">🌿 Circuito Terê Verde</div>
-            <div class="nav-buttons">
-                <button onclick="window.location.href='cadastro.html'">Cadastrar</button>
-                <button onclick="window.location.href='login.html'">Entrar</button>
-            </div>
+            <div class="nav-buttons" id="navButtons"></div>
         </div>
     </header>
 
@@ -38,6 +35,32 @@
 
     <script src="script.js"></script>
     <script>
+        async function init() {
+            const user = await checkAuth();
+            const nav = document.getElementById('navButtons');
+            
+            if (user) {
+                nav.innerHTML = `
+                    <button onclick="window.location.href='perfil.html'">👤 Perfil</button>
+                    ${user.role === 'admin' ? '<button onclick="window.location.href=\'admin.html\'">⚙️ Admin</button>' : ''}
+                    <button onclick="logout()">Sair</button>
+                `;
+            } else {
+                nav.innerHTML = `
+                    <button onclick="window.location.href='cadastro.html'">Cadastrar</button>
+                    <button onclick="window.location.href='login.html'">Entrar</button>
+                `;
+            }
+            
+            loadTrilhas();
+            loadEventos();
+        }
+
+        function logout() {
+            clearAuth();
+            window.location.reload();
+        }
+
         async function loadTrilhas() {
             const response = await fetch(`${API_URL}/trilhas`);
             const data = await response.json();
@@ -76,8 +99,7 @@
             }
         }
 
-        loadTrilhas();
-        loadEventos();
+        init();
     </script>
 </body>
 </html>

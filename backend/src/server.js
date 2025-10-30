@@ -22,6 +22,7 @@ app.use(cors());
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/trilhas', require('./routes/trilhaRoutes'));
 app.use('/api/eventos', require('./routes/eventoRoutes'));
+app.use('/api/users', require('./routes/userRoutes'));
 
 // Rota de teste
 app.get('/', (req, res) => {

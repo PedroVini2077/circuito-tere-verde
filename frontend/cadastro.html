@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro - Circuito Terê Verde</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <header>
         <div class="header-content">
-            <div class="logo" onclick="window.location.href='index.html'" style="cursor:pointer">🌿 Circuito Terê Verde</div>
+            <div class="logo" onclick="window.location.href='index.html'" style="cursor:pointer">🌿 Circuito Terê Verde
+            </div>
             <div class="nav-buttons">
                 <button onclick="window.location.href='index.html'">Voltar</button>
             </div>
@@ -53,7 +56,6 @@
     <script>
         async function cadastrar(e) {
             e.preventDefault();
-
             const userData = {
                 nome: document.getElementById('nome').value,
                 email: document.getElementById('email').value,
@@ -71,15 +73,9 @@
                 const data = await response.json();
 
                 if (data.success) {
-                    showAlert('Cadastro realizado com sucesso! Redirecionando...', 'success');
-                    setToken(data.data.token);
-                    
+                    showAlert('Cadastro realizado! Faça login para continuar.', 'success');
                     setTimeout(() => {
-                        if (data.data.role === 'admin') {
-                            window.location.href = 'admin.html';
-                        } else {
-                            window.location.href = 'index.html';
-                        }
+                        window.location.href = 'login.html';
                     }, 2000);
                 } else {
                     showAlert(data.message || 'Erro ao cadastrar', 'error');
@@ -90,4 +86,5 @@
         }
     </script>
 </body>
+
 </html>

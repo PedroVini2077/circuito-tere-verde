@@ -20,12 +20,13 @@ const seedData = async () => {
 
     // Criar usuário admin
     const admin = await User.create({
-      nome: 'Administrador',
+      nome: 'Super Administrador',
       email: 'admin@tereverde.com',
       senha: 'admin123',
       role: 'admin',
+      superAdmin: true,
     });
-
+    
     console.log('✅ Admin criado');
 
     // Criar trilhas

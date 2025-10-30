@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Circuito Terê Verde</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <header>
         <div class="header-content">
@@ -23,7 +25,7 @@
         <div class="card">
             <h2>👨‍💼 Dashboard</h2>
             <p>Bem-vindo, <strong id="adminName"></strong>!</p>
-            
+
             <div class="stats">
                 <div class="stat-card">
                     <h3 id="statTrilhas">0</h3>
@@ -40,8 +42,9 @@
         <div class="card">
             <h2>🥾 Gerenciar Trilhas</h2>
             <button class="btn btn-primary" onclick="toggleForm('trilha')">+ Nova Trilha</button>
-            
-            <div id="formTrilha" class="hidden" style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 2px solid var(--light);">
+
+            <div id="formTrilha" class="hidden"
+                style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 2px solid var(--light);">
                 <form onsubmit="createTrilha(event)">
                     <div class="form-grid">
                         <div class="form-group"><label>Nome:</label><input type="text" id="tNome" required></div>
@@ -52,13 +55,19 @@
                                 <option value="difícil">Difícil</option>
                             </select>
                         </div>
-                        <div class="form-group"><label>Distância (km):</label><input type="number" id="tDistancia" step="0.1" required></div>
+                        <div class="form-group"><label>Distância (km):</label><input type="number" id="tDistancia"
+                                step="0.1" required></div>
                         <div class="form-group"><label>Duração:</label><input type="text" id="tDuracao" required></div>
-                        <div class="form-group form-grid-full"><label>Descrição:</label><textarea id="tDescricao" required></textarea></div>
-                        <div class="form-group"><label>Localização:</label><input type="text" id="tLocalizacao" required></div>
-                        <div class="form-group"><label>Capacidade:</label><input type="number" id="tCapacidade" value="50" required></div>
-                        <div class="form-group"><label>Abertura:</label><input type="time" id="tAbertura" value="08:00" required></div>
-                        <div class="form-group"><label>Fechamento:</label><input type="time" id="tFechamento" value="17:00" required></div>
+                        <div class="form-group form-grid-full"><label>Descrição:</label><textarea id="tDescricao"
+                                required></textarea></div>
+                        <div class="form-group"><label>Localização:</label><input type="text" id="tLocalizacao"
+                                required></div>
+                        <div class="form-group"><label>Capacidade:</label><input type="number" id="tCapacidade"
+                                value="50" required></div>
+                        <div class="form-group"><label>Abertura:</label><input type="time" id="tAbertura" value="08:00"
+                                required></div>
+                        <div class="form-group"><label>Fechamento:</label><input type="time" id="tFechamento"
+                                value="17:00" required></div>
                     </div>
                     <button type="submit" class="btn btn-primary">Criar</button>
                     <button type="button" class="btn btn-secondary" onclick="toggleForm('trilha')">Cancelar</button>
@@ -72,15 +81,20 @@
         <div class="card">
             <h2>🎪 Gerenciar Eventos</h2>
             <button class="btn btn-primary" onclick="toggleForm('evento')">+ Novo Evento</button>
-            
-            <div id="formEvento" class="hidden" style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 2px solid var(--light);">
+
+            <div id="formEvento" class="hidden"
+                style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 2px solid var(--light);">
                 <form onsubmit="createEvento(event)">
                     <div class="form-grid">
-                        <div class="form-group form-grid-full"><label>Título:</label><input type="text" id="eTitulo" required></div>
-                        <div class="form-group form-grid-full"><label>Descrição:</label><textarea id="eDescricao" required></textarea></div>
-                        <div class="form-group"><label>Data Início:</label><input type="date" id="eDataInicio" required></div>
+                        <div class="form-group form-grid-full"><label>Título:</label><input type="text" id="eTitulo"
+                                required></div>
+                        <div class="form-group form-grid-full"><label>Descrição:</label><textarea id="eDescricao"
+                                required></textarea></div>
+                        <div class="form-group"><label>Data Início:</label><input type="date" id="eDataInicio" required>
+                        </div>
                         <div class="form-group"><label>Data Fim:</label><input type="date" id="eDataFim" required></div>
-                        <div class="form-group"><label>Horário:</label><input type="text" id="eHorario" placeholder="09:00 - 13:00" required></div>
+                        <div class="form-group"><label>Horário:</label><input type="text" id="eHorario"
+                                placeholder="09:00 - 13:00" required></div>
                         <div class="form-group"><label>Local:</label><input type="text" id="eLocal" required></div>
                         <div class="form-group"><label>Tipo:</label>
                             <select id="eTipo" required>
@@ -91,7 +105,8 @@
                                 <option value="outro">Outro</option>
                             </select>
                         </div>
-                        <div class="form-group"><label>Capacidade:</label><input type="number" id="eCapacidade" value="30" required></div>
+                        <div class="form-group"><label>Capacidade:</label><input type="number" id="eCapacidade"
+                                value="30" required></div>
                     </div>
                     <button type="submit" class="btn btn-primary">Criar</button>
                     <button type="button" class="btn btn-secondary" onclick="toggleForm('evento')">Cancelar</button>
@@ -115,6 +130,7 @@
             document.getElementById('adminName').textContent = userData.nome;
             loadTrilhas();
             loadEventos();
+            loadUsers();
             updateStats();
         }
 
@@ -134,7 +150,7 @@
             });
             const data = await response.json();
             const container = document.getElementById('trilhas');
-            
+
             if (data.success && data.data.length > 0) {
                 container.innerHTML = data.data.map(t => `
                     <div class="item-card">
@@ -144,6 +160,11 @@
                         <div style="margin-top: 1rem;">
                             <button class="btn btn-small btn-secondary" onclick="toggleDisp('${t._id}', ${!t.disponivel})">${t.disponivel ? 'Fechar' : 'Abrir'}</button>
                             <button class="btn btn-small btn-danger" onclick="deleteTrilha('${t._id}')">Deletar</button>
+                        </div>
+                        <!-- Gerenciar Usuários -->
+                            <div class="card">
+                            <h2>👥 Gerenciar Usuários</h2>
+                            <div id="users" class="grid"></div>
                         </div>
                     </div>
                 `).join('');
@@ -212,7 +233,7 @@
             });
             const data = await response.json();
             const container = document.getElementById('eventos');
-            
+
             if (data.success && data.data.length > 0) {
                 container.innerHTML = data.data.map(e => `
                     <div class="item-card">
@@ -283,8 +304,8 @@
 
         async function updateStats() {
             const [t, e] = await Promise.all([
-                fetch(`${API_URL}/trilhas`, { headers: { 'Authorization': `Bearer ${getToken()}` }}),
-                fetch(`${API_URL}/eventos?ativo=true`, { headers: { 'Authorization': `Bearer ${getToken()}` }})
+                fetch(`${API_URL}/trilhas`, { headers: { 'Authorization': `Bearer ${getToken()}` } }),
+                fetch(`${API_URL}/eventos?ativo=true`, { headers: { 'Authorization': `Bearer ${getToken()}` } })
             ]);
             const trilhas = await t.json();
             const eventos = await e.json();
@@ -292,7 +313,50 @@
             document.getElementById('statEventos').textContent = eventos.count || 0;
         }
 
+        async function loadUsers() {
+            const response = await fetch(`${API_URL}/users`, {
+                headers: { 'Authorization': `Bearer ${getToken()}` }
+            });
+            const data = await response.json();
+            const container = document.getElementById('users');
+            
+            if (data.success && data.data.length > 0) {
+                container.innerHTML = data.data.map(u => `
+                    <div class="item-card">
+                        <h3>${u.nome}</h3>
+                        <p><strong>Email:</strong> ${u.email}</p>
+                        <p><strong>Tipo:</strong> ${u.role}</p>
+                        ${u.superAdmin ? '<span class="badge badge-warning">Super Admin</span>' : ''}
+                        ${u._id !== userData._id ? `
+                            <div style="margin-top: 1rem;">
+                                <button class="btn btn-small btn-danger" onclick="deleteUser('${u._id}', '${u.role}')">Deletar</button>
+                            </div>
+                        ` : '<p style="margin-top:1rem;color:var(--gray)">Você</p>'}
+                    </div>
+                `).join('');
+            }
+        }
+
+        async function deleteUser(id, role) {
+            if (!confirm('Deletar este usuário?')) return;
+            
+            const response = await fetch(`${API_URL}/users/${id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${getToken()}` }
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                showAlert('Usuário deletado!', 'success');
+                loadUsers();
+            } else {
+                showAlert(data.message, 'error');
+            }
+        }
+
         init();
     </script>
 </body>
+
 </html>
