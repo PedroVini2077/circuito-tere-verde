@@ -66,4 +66,9 @@ eventoSchema.pre('save', function (next) {
   next();
 });
 
+// Índices para performance
+eventoSchema.index({ dataInicio: 1, ativo: 1 });
+eventoSchema.index({ tipo: 1 });
+eventoSchema.index({ createdAt: -1 });
+
 module.exports = mongoose.model('Evento', eventoSchema);

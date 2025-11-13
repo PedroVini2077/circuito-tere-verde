@@ -60,4 +60,9 @@ const trilhaSchema = new mongoose.Schema(
   }
 );
 
+// Índices para performance
+trilhaSchema.index({ nome: 'text', descricao: 'text' });
+trilhaSchema.index({ dificuldade: 1, disponivel: 1 });
+trilhaSchema.index({ createdAt: -1 });
+
 module.exports = mongoose.model('Trilha', trilhaSchema);

@@ -1,6 +1,10 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const helmet = require('helmet');
+const compression = require('compression');
+const rateLimit = require('express-rate-limit');
+const morgan = require('morgan');
 const connectDB = require('./config/database');
 const errorHandler = require('./middlewares/errorHandler');
 
@@ -13,13 +17,40 @@ connectDB();
 // Inicializar express
 const app = express();
 
-// Middlewares
+// SEGURANÇA: Headers HTTP seguros
+app.use(helmet());
+
+// PERFORMANCE: Compressão de respostas
+app.use(compression());
+
+// Middlewares básicos
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// SEGURANÇA: CORS configurado
 app.use(cors({
   origin: '*',
   credentials: true
 }));
+
+// Logs (apenas em desenvolvimento)
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
+
+// SEGURANÇA: Rate limiting global
+const limiter = rateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minuto
+  max: 100, // 100 requisições por minuto
+  message: {
+    success: false,
+    message: 'Muitas requisições. Aguarde um momento.',
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+app.use('/api/', limiter);
 
 // Rotas
 app.use('/api/auth', require('./routes/authRoutes'));
@@ -37,6 +68,7 @@ app.get('/', (req, res) => {
       auth: '/api/auth',
       trilhas: '/api/trilhas',
       eventos: '/api/eventos',
+      users: '/api/users',
     },
   });
 });
@@ -51,9 +83,9 @@ const server = app.listen(PORT, () => {
   console.log(`\n🚀 Servidor Backend rodando na porta ${PORT}`);
   console.log(`📡 API: http://localhost:${PORT}/api`);
   console.log(`\n🌐 Para acessar o SITE:`);
-  console.log(`💻 PC: http://localhost:8080`);
-  console.log(`📱 Mobile: http://10.0.0.21:8080`);
-  console.log(`\n💡 Lembre-se de rodar o frontend com: npx http-server -p 8080 -a 0.0.0.0\n`);
+  console.log(`   💻 PC: http://localhost:8080`);
+  console.log(`   📱 Mobile: http://10.0.0.21:8080`);
+  console.log(`\n💡 Use: npm run full (roda backend + frontend)\n`);
 });
 
 // Tratamento de erros não capturados
