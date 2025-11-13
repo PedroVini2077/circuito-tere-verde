@@ -29,3 +29,6 @@ build/
 
 # MongoDB
 *.mongodb
+
+# Apresentação (uso interno)
+apresentacao/
