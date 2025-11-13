@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meu Perfil</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <header>
         <div class="header-content">
-            <div class="logo" onclick="window.location.href='home.html'" style="cursor:pointer">🌿 Circuito Terê Verde</div>
+            <div class="logo" onclick="window.location.href='home.html'" style="cursor:pointer">🌿 Circuito Terê Verde
+            </div>
             <div class="nav-buttons">
                 <button onclick="window.location.href='home.html'">Voltar</button>
             </div>
@@ -35,15 +38,16 @@
             }
 
             document.getElementById('profileInfo').innerHTML = `
-                <p><strong>Nome:</strong> ${user.nome}</p>
-                <p><strong>Email:</strong> ${user.email}</p>
-                <p><strong>Tipo:</strong> ${user.role === 'admin' ? 'Administrador' : 'Visitante'}</p>
-                ${user.superAdmin ? '<p><strong>🌟 Super Administrador</strong></p>' : ''}
-                <p><strong>Cadastrado em:</strong> ${new Date(user.createdAt).toLocaleDateString('pt-BR')}</p>
-            `;
+        <p><strong>Nome:</strong> ${user.nome}</p>
+        <p><strong>Email:</strong> ${user.email}</p>
+        <p><strong>Tipo:</strong> ${user.role === 'admin' ? 'Administrador' : 'Visitante'}</p>
+        ${user.superAdmin ? '<p><strong>👑 Super Administrador (Fundador)</strong></p>' : ''}
+        <p><strong>Cadastrado em:</strong> ${new Date(user.createdAt).toLocaleDateString('pt-BR')}</p>
+    `;
         }
 
         init();
     </script>
 </body>
+
 </html>

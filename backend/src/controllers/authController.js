@@ -6,7 +6,7 @@ const generateToken = require('../utils/generateToken');
 // @access  Public
 exports.register = async (req, res) => {
   try {
-    const { nome, email, senha, role } = req.body;
+    const { nome, email, senha, role, masterKey } = req.body;
 
     // Verificar se usuário já existe
     const userExists = await User.findOne({ email });
@@ -18,12 +18,36 @@ exports.register = async (req, res) => {
       });
     }
 
+    // Validar role
+    let userRole = 'visitante'; // Padrão
+    let isSuperAdmin = false;
+
+    if (role === 'admin' || role === 'superadmin') {
+      // Admin comum pode ser criado normalmente
+      if (role === 'admin') {
+        userRole = 'admin';
+      }
+      
+      // Super admin precisa da master key
+      if (role === 'superadmin') {
+        if (!masterKey || masterKey !== process.env.SUPER_ADMIN_KEY) {
+          return res.status(403).json({
+            success: false,
+            message: 'Master Key inválida. Apenas fundadores podem criar Super Admins.',
+          });
+        }
+        userRole = 'admin';
+        isSuperAdmin = true;
+      }
+    }
+
     // Criar usuário
     const user = await User.create({
       nome,
       email,
       senha,
-      role: role || 'visitante',
+      role: userRole,
+      superAdmin: isSuperAdmin,
     });
 
     res.status(201).json({
@@ -33,6 +57,7 @@ exports.register = async (req, res) => {
         nome: user.nome,
         email: user.email,
         role: user.role,
+        superAdmin: user.superAdmin,
         token: generateToken(user._id),
       },
     });

@@ -18,7 +18,7 @@ const seedData = async () => {
 
     console.log('🗑️  Dados antigos removidos');
 
-    // Criar usuário admin
+    // Criar usuário super admin
     const admin = await User.create({
       nome: 'Super Administrador',
       email: 'admin@tereverde.com',
@@ -26,8 +26,11 @@ const seedData = async () => {
       role: 'admin',
       superAdmin: true,
     });
-    
-    console.log('✅ Admin criado');
+
+    console.log('✅ Super Admin criado');
+    console.log('📧 Email: admin@tereverde.com');
+    console.log('🔑 Senha: admin123');
+    console.log('👑 Super Admin: true');
 
     // Criar trilhas
     const trilhas = await Trilha.insertMany([

@@ -27,23 +27,34 @@
             <form onsubmit="cadastrar(event)">
                 <div class="form-group">
                     <label>Nome Completo:</label>
-                    <input type="text" id="nome" required>
+                    <input type="text" id="nome" autocomplete="off" required>
                 </div>
                 <div class="form-group">
                     <label>Email:</label>
-                    <input type="email" id="email" required>
+                    <input type="email" id="email" autocomplete="off" required>
                 </div>
                 <div class="form-group">
                     <label>Senha (mínimo 6 caracteres):</label>
-                    <input type="password" id="senha" minlength="6" required>
+                    <input type="password" id="senha" autocomplete="new-password" minlength="6" required>
                 </div>
                 <div class="form-group">
                     <label>Tipo de Conta:</label>
-                    <select id="role">
+                    <select id="role" onchange="toggleMasterKey()">
                         <option value="visitante">Visitante</option>
                         <option value="admin">Administrador</option>
+                        <option value="superadmin">Super Administrador (Fundador)</option>
                     </select>
                 </div>
+
+                <!-- Campo Master Key (oculto por padrão) -->
+                <div class="form-group" id="masterKeyField" style="display: none;">
+                    <label>🔑 Master Key (apenas fundadores):</label>
+                    <input type="password" id="masterKey" autocomplete="off" placeholder="Chave secreta">
+                    <small style="color: var(--gray); display: block; margin-top: 0.3rem;">
+                        Apenas fundadores do projeto possuem esta chave
+                    </small>
+                </div>
+
                 <button type="submit" class="btn btn-primary" style="width: 100%;">Cadastrar</button>
             </form>
             <p style="margin-top: 1rem; text-align: center;">
@@ -62,6 +73,56 @@
                 senha: document.getElementById('senha').value,
                 role: document.getElementById('role').value
             };
+
+            try {
+                const response = await fetch(`${API_URL}/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(userData)
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showAlert('Cadastro realizado! Faça login para continuar.', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 2000);
+                } else {
+                    showAlert(data.message || 'Erro ao cadastrar', 'error');
+                }
+            } catch (error) {
+                showAlert('Erro ao conectar com o servidor', 'error');
+            }
+        }
+
+        function toggleMasterKey() {
+            const role = document.getElementById('role').value;
+            const masterKeyField = document.getElementById('masterKeyField');
+
+            if (role === 'superadmin') {
+                masterKeyField.style.display = 'block';
+                document.getElementById('masterKey').required = true;
+            } else {
+                masterKeyField.style.display = 'none';
+                document.getElementById('masterKey').required = false;
+            }
+        }
+
+        async function cadastrar(e) {
+            e.preventDefault();
+
+            const userData = {
+                nome: document.getElementById('nome').value,
+                email: document.getElementById('email').value,
+                senha: document.getElementById('senha').value,
+                role: document.getElementById('role').value,
+            };
+
+            // Adicionar master key se for super admin
+            if (userData.role === 'superadmin') {
+                userData.masterKey = document.getElementById('masterKey').value;
+            }
 
             try {
                 const response = await fetch(`${API_URL}/auth/register`, {
