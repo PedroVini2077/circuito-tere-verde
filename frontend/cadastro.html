@@ -41,7 +41,6 @@
                     <label>Tipo de Conta:</label>
                     <select id="role" onchange="toggleMasterKey()">
                         <option value="visitante">Visitante</option>
-                        <option value="admin">Administrador</option>
                         <option value="superadmin">Super Administrador (Fundador)</option>
                     </select>
                 </div>
@@ -65,37 +64,6 @@
 
     <script src="script.js"></script>
     <script>
-        async function cadastrar(e) {
-            e.preventDefault();
-            const userData = {
-                nome: document.getElementById('nome').value,
-                email: document.getElementById('email').value,
-                senha: document.getElementById('senha').value,
-                role: document.getElementById('role').value
-            };
-
-            try {
-                const response = await fetch(`${API_URL}/auth/register`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(userData)
-                });
-
-                const data = await response.json();
-
-                if (data.success) {
-                    showAlert('Cadastro realizado! Faça login para continuar.', 'success');
-                    setTimeout(() => {
-                        window.location.href = 'login.html';
-                    }, 2000);
-                } else {
-                    showAlert(data.message || 'Erro ao cadastrar', 'error');
-                }
-            } catch (error) {
-                showAlert('Erro ao conectar com o servidor', 'error');
-            }
-        }
-
         function toggleMasterKey() {
             const role = document.getElementById('role').value;
             const masterKeyField = document.getElementById('masterKeyField');
@@ -112,20 +80,27 @@
         async function cadastrar(e) {
             e.preventDefault();
 
+            const role = document.getElementById('role').value;
             const userData = {
                 nome: document.getElementById('nome').value,
                 email: document.getElementById('email').value,
                 senha: document.getElementById('senha').value,
-                role: document.getElementById('role').value,
             };
 
-            // Adicionar master key se for super admin
-            if (userData.role === 'superadmin') {
+            // Definir rota e dados baseado no tipo de conta
+            let endpoint = '';
+            
+            if (role === 'superadmin') {
+                // Super Admin precisa da Master Key
                 userData.masterKey = document.getElementById('masterKey').value;
+                endpoint = `${API_URL}/auth/register-superadmin`;
+            } else {
+                // Visitante (não envia role, backend força como visitante)
+                endpoint = `${API_URL}/auth/register`;
             }
 
             try {
-                const response = await fetch(`${API_URL}/auth/register`, {
+                const response = await fetch(endpoint, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(userData)
@@ -134,7 +109,7 @@
                 const data = await response.json();
 
                 if (data.success) {
-                    showAlert('Cadastro realizado! Faça login para continuar.', 'success');
+                    showAlert(data.message || 'Cadastro realizado! Faça login para continuar.', 'success');
                     setTimeout(() => {
                         window.location.href = 'login.html';
                     }, 2000);
@@ -142,6 +117,7 @@
                     showAlert(data.message || 'Erro ao cadastrar', 'error');
                 }
             } catch (error) {
+                console.error('Erro no cadastro:', error);
                 showAlert('Erro ao conectar com o servidor', 'error');
             }
         }

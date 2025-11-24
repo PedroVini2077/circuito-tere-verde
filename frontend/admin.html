@@ -185,6 +185,34 @@
         <div class="card">
             <h2>👥 Gerenciar Usuários</h2>
 
+            <!-- Botão para criar admin (apenas super admins) -->
+            <button class="btn btn-primary" onclick="toggleForm('admin')" id="btnCreateAdmin"
+                style="margin-bottom: 1rem;">
+                ➕ Criar Novo Administrador
+            </button>
+
+            <!-- Formulário de criar admin (oculto por padrão) -->
+            <div id="formAdmin" class="hidden"
+                style="margin-bottom: 1.5rem; padding: 1.5rem; border: 2px solid var(--light); border-radius: 8px; background: #f9f9f9;">
+                <h3>➕ Criar Novo Administrador</h3>
+                <form onsubmit="createAdmin(event)">
+                    <div class="form-group">
+                        <label>Nome Completo:</label>
+                        <input type="text" id="aNome" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email:</label>
+                        <input type="email" id="aEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Senha (mínimo 6 caracteres):</label>
+                        <input type="password" id="aSenha" minlength="6" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Criar Admin</button>
+                    <button type="button" class="btn btn-secondary" onclick="toggleForm('admin')">Cancelar</button>
+                </form>
+            </div>
+
             <!-- Abas -->
             <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
                 <button class="btn btn-secondary" onclick="showUserTab('admins')" id="btnAdmins">
@@ -213,6 +241,14 @@
                     return;
                 }
                 document.getElementById('adminName').textContent = userData.nome;
+
+                // Mostrar botão de criar admin apenas para super admins
+                if (userData.superAdmin) {
+                    document.getElementById('btnCreateAdmin').style.display = 'block';
+                } else {
+                    document.getElementById('btnCreateAdmin').style.display = 'none';
+                }
+
                 loadTrilhas();
                 loadEventos();
                 loadUsers();
@@ -593,6 +629,46 @@
                     showAlert(data.message, 'error');
                 }
             }
+
+            async function createAdmin(e) {
+                e.preventDefault();
+
+                const adminData = {
+                    nome: document.getElementById('aNome').value,
+                    email: document.getElementById('aEmail').value,
+                    senha: document.getElementById('aSenha').value
+                };
+
+                try {
+                    const response = await fetch(`${API_URL}/auth/register-admin`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${getToken()}`
+                        },
+                        body: JSON.stringify(adminData)
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        showAlert('Administrador criado com sucesso!', 'success');
+                        toggleForm('admin');
+                        // Limpar formulário
+                        document.getElementById('aNome').value = '';
+                        document.getElementById('aEmail').value = '';
+                        document.getElementById('aSenha').value = '';
+                        // Recarregar lista
+                        loadUsers();
+                    } else {
+                        showAlert(data.message || 'Erro ao criar administrador', 'error');
+                    }
+                } catch (error) {
+                    console.error('Erro ao criar admin:', error);
+                    showAlert('Erro ao conectar com o servidor', 'error');
+                }
+            }
+
             // Mostrar aba de admins por padrão
             showUserTab('admins');
             init();
