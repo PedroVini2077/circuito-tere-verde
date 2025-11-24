@@ -5,7 +5,6 @@
 http://localhost:5000
 ```
 
----
 
 ## 🔐 Autenticação
 
@@ -20,7 +19,6 @@ A API utiliza **JWT (JSON Web Tokens)** para autenticação.
 Authorization: Bearer seu_token_aqui
 ```
 
----
 
 ## 📋 Respostas Padrão
 
@@ -40,7 +38,6 @@ Authorization: Bearer seu_token_aqui
 }
 ```
 
----
 
 ## 🔑 Endpoints de Autenticação
 
@@ -84,7 +81,6 @@ Authorization: Bearer seu_token_aqui
 - `400` - Email já cadastrado
 - `400` - Dados inválidos
 
----
 
 ### 2. Fazer Login
 
@@ -123,7 +119,6 @@ Authorization: Bearer seu_token_aqui
 - `401` - Credenciais inválidas
 - `401` - Usuário inativo
 
----
 
 ### 3. Obter Dados do Usuário Logado
 
@@ -156,7 +151,6 @@ Authorization: Bearer seu_token_aqui
 - `401` - Token não fornecido
 - `401` - Token inválido ou expirado
 
----
 
 ## 🥾 Endpoints de Trilhas
 
@@ -210,7 +204,6 @@ GET /api/trilhas?disponivel=true&dificuldade=fácil
 }
 ```
 
----
 
 ### 2. Obter Trilha Específica
 
@@ -260,7 +253,6 @@ GET /api/trilhas/690297b3a6bcab0f48e1c13b
 - `404` - Trilha não encontrada
 - `500` - ID inválido
 
----
 
 ### 3. Criar Nova Trilha
 
@@ -337,7 +329,6 @@ Content-Type: application/json
 - `403` - Acesso negado (não é admin)
 - `400` - Dados inválidos
 
----
 
 ### 4. Atualizar Trilha
 
@@ -379,7 +370,6 @@ Content-Type: application/json
 - `403` - Acesso negado
 - `404` - Trilha não encontrada
 
----
 
 ### 5. Deletar Trilha
 
@@ -406,7 +396,6 @@ Authorization: Bearer seu_token_aqui
 - `403` - Acesso negado
 - `404` - Trilha não encontrada
 
----
 
 ### 6. Atualizar Disponibilidade da Trilha
 
@@ -439,7 +428,6 @@ Content-Type: application/json
 }
 ```
 
----
 
 ## 🎪 Endpoints de Eventos
 
@@ -493,7 +481,6 @@ GET /api/eventos?dataInicio=2024-12-01&dataFim=2024-12-31
 }
 ```
 
----
 
 ### 2. Obter Evento Específico
 
@@ -529,7 +516,6 @@ GET /api/eventos?dataInicio=2024-12-01&dataFim=2024-12-31
 }
 ```
 
----
 
 ### 3. Criar Novo Evento
 
@@ -599,7 +585,6 @@ Content-Type: application/json
 - `401` - Não autenticado
 - `403` - Acesso negado
 
----
 
 ### 4. Atualizar Evento
 
@@ -623,7 +608,6 @@ Content-Type: application/json
 }
 ```
 
----
 
 ### 5. Deletar Evento
 
@@ -640,7 +624,6 @@ Content-Type: application/json
 }
 ```
 
----
 
 ### 6. Atualizar Status do Evento
 
@@ -667,7 +650,6 @@ Content-Type: application/json
 }
 ```
 
----
 
 ### 7. Atualizar Vagas Disponíveis
 
@@ -697,12 +679,11 @@ Content-Type: application/json
 **Erros Possíveis:**
 - `400` - Vagas maiores que capacidade total
 
----
 
 ## 📊 Códigos de Status HTTP
 
 | Código | Significado |
-|--------|-------------|
+---|
 | 200 | OK - Requisição bem-sucedida |
 | 201 | Created - Recurso criado com sucesso |
 | 400 | Bad Request - Dados inválidos |
@@ -711,7 +692,6 @@ Content-Type: application/json
 | 404 | Not Found - Recurso não encontrado |
 | 500 | Internal Server Error - Erro no servidor |
 
----
 
 ## 🧪 Exemplos de Uso com cURL
 
@@ -735,7 +715,6 @@ curl -X POST http://localhost:5000/api/trilhas \
   -d '{"nome":"Trilha Nova","descricao":"Descrição...","dificuldade":"fácil","distancia":5,"duracao":"2 horas","localizacao":"Local","horarioFuncionamento":{"abertura":"08:00","fechamento":"17:00"}}'
 ```
 
----
 
 ## 🔍 Notas Importantes
 
@@ -744,7 +723,6 @@ curl -X POST http://localhost:5000/api/trilhas \
 3. **Validações são aplicadas** - Dados inválidos retornam erro 400
 4. **IDs do MongoDB** - Sempre use IDs válidos do formato MongoDB ObjectId
 
----
 
 **📖 Para mais informações, consulte os arquivos:**
 - `ESCOPO.md` - Escopo do projeto

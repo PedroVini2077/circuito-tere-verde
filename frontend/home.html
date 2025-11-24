@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Circuito Terê Verde</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <header>
         <div class="header-content">
-            <div class="logo" onclick="window.location.href='home.html'" style="cursor:pointer">🌿 Circuito Terê Verde</div>
+            <div class="logo" onclick="window.location.href='home.html'" style="cursor:pointer">🌿 Circuito Terê Verde
+            </div>
             <div class="nav-buttons" id="navButtons"></div>
         </div>
     </header>
@@ -38,7 +41,6 @@
         async function init() {
             const user = await checkAuth();
 
-            // Se NÃO estiver logado, redireciona para tela de boas-vindas
             if (!user) {
                 window.location.href = 'index.html';
                 return;
@@ -46,15 +48,60 @@
 
             const nav = document.getElementById('navButtons');
             nav.innerHTML = `
-                <button onclick="window.location.href='perfil.html'">👤 Perfil</button>
-                ${user.role === 'admin' ? '<button onclick="window.location.href=\'admin.html\'">⚙️ Admin</button>' : ''}
-                <button onclick="logout()">Sair</button>
-            `;
-            
+        <button onclick="window.location.href='perfil.html'">👤 Perfil</button>
+        ${user.role === 'admin' ? '<button onclick="window.location.href=\'admin.html\'">⚙️ Admin</button>' : ''}
+        <button onclick="logout()">Sair</button>
+    `;
+
+            // Mostrar popup APENAS para Super Admin (uma vez por sessão)
+            if (user.superAdmin && !sessionStorage.getItem('superAdminWelcomeShown')) {
+                showSuperAdminWelcome(user.nome);
+                sessionStorage.setItem('superAdminWelcomeShown', 'true');
+            }
+
             loadTrilhas();
             loadEventos();
         }
 
+        function showSuperAdminWelcome(nome) {
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay';
+            modal.innerHTML = `
+        <div class="modal-super-admin">
+            <div class="crown-big">👑</div>
+            <h2>Bem-vindo, ${nome}!</h2>
+            <p>Você está logado como <strong>Super Administrador</strong></p>
+            
+            <div class="privileges">
+                <p style="color: #FFD700; font-weight: bold; margin-bottom: 1rem;">Seus Privilégios:</p>
+                <ul>
+                    <li>Controle total sobre trilhas e eventos</li>
+                    <li>Gerenciar todos os usuários do sistema</li>
+                    <li>Deletar administradores comuns</li>
+                    <li>Proteção: Super Admins não se deletam</li>
+                    <li>Acesso a todas as funcionalidades</li>
+                </ul>
+            </div>
+            
+            <p style="font-size: 0.9rem; color: #95d5b2;">
+                Com grandes poderes vêm grandes responsabilidades 🛡️
+            </p>
+            
+            <button class="btn-close" onclick="this.closest('.modal-overlay').remove()">
+                Entendido!
+            </button>
+        </div>
+    `;
+
+            document.body.appendChild(modal);
+
+            // Fechar ao clicar fora
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            });
+        }
         function logout() {
             clearAuth();
             window.location.href = 'index.html';
@@ -64,7 +111,7 @@
             const response = await fetch(`${API_URL}/trilhas`);
             const data = await response.json();
             const container = document.getElementById('trilhas');
-            
+
             if (data.success && data.data.length > 0) {
                 container.innerHTML = data.data.map(t => `
                     <div class="item-card">
@@ -87,12 +134,12 @@
             console.log('Eventos:', data.data);
 
             const container = document.getElementById('eventos');
-            
+
             if (data.success && data.data.length > 0) {
                 container.innerHTML = data.data.map(e => {
                     const inscritos = e.capacidade - (e.vagasDisponiveis || 0);
                     const esgotado = e.vagasDisponiveis === 0;
-                    
+
                     return `
                         <div class="item-card">
                             <h3>${e.titulo}</h3>
@@ -111,4 +158,5 @@
         init();
     </script>
 </body>
+
 </html>

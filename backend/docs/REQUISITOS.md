@@ -22,7 +22,6 @@
 - Apenas administradores podem criar, editar e deletar trilhas e eventos
 - Visitantes podem apenas visualizar trilhas e eventos públicos
 
----
 
 ### RF02 - Gestão de Trilhas
 
@@ -57,7 +56,6 @@
 - Administradores podem alterar o status de disponibilidade
 - Status: true (aberta) ou false (fechada)
 
----
 
 ### RF03 - Gestão de Eventos
 
@@ -98,7 +96,6 @@
 - Administradores podem atualizar vagas disponíveis
 - Vagas disponíveis não podem ser maiores que a capacidade total
 
----
 
 ## ⚙️ Requisitos Não-Funcionais (RNF)
 
@@ -147,7 +144,6 @@
 - Tratamento de quedas de conexão com o banco
 - Mensagens apropriadas em caso de indisponibilidade
 
----
 
 ## 🛠️ Requisitos Técnicos
 
@@ -178,7 +174,6 @@ backend/
 └── package.json        # Dependências
 ```
 
----
 
 ## 📊 Regras de Negócio
 
@@ -205,7 +200,6 @@ backend/
 2. Usuários inativos não podem fazer login
 3. Token deve ser enviado no header Authorization com prefixo "Bearer"
 
----
 
 ## ✅ Critérios de Aceitação
 

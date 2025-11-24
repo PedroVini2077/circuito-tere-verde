@@ -184,46 +184,60 @@
         <!-- Gerenciar Usuários -->
         <div class="card">
             <h2>👥 Gerenciar Usuários</h2>
-            <div id="users" class="grid"></div>
+
+            <!-- Abas -->
+            <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
+                <button class="btn btn-secondary" onclick="showUserTab('admins')" id="btnAdmins">
+                    👨‍💼 Administradores
+                </button>
+                <button class="btn btn-secondary" onclick="showUserTab('visitantes')" id="btnVisitantes">
+                    👤 Visitantes
+                </button>
+            </div>
+
+            <!-- Grid de Admins -->
+            <div id="tabAdmins" class="grid"></div>
+
+            <!-- Grid de Visitantes -->
+            <div id="tabVisitantes" class="grid" style="display: none;"></div>
         </div>
-    </div>
 
-    <script src="script.js"></script>
-    <script>
-        let userData = null;
+        <script src="script.js"></script>
+        <script>
+            let userData = null;
 
-        async function init() {
-            userData = await checkAuth();
-            if (!userData || userData.role !== 'admin') {
-                window.location.href = 'login.html';
-                return;
+            async function init() {
+                userData = await checkAuth();
+                if (!userData || userData.role !== 'admin') {
+                    window.location.href = 'login.html';
+                    return;
+                }
+                document.getElementById('adminName').textContent = userData.nome;
+                loadTrilhas();
+                loadEventos();
+                loadUsers();
+                updateStats();
             }
-            document.getElementById('adminName').textContent = userData.nome;
-            loadTrilhas();
-            loadEventos();
-            loadUsers();
-            updateStats();
-        }
 
-        function toggleForm(type) {
-            const form = document.getElementById(`form${type.charAt(0).toUpperCase() + type.slice(1)}`);
-            form.classList.toggle('hidden');
-        }
+            function toggleForm(type) {
+                const form = document.getElementById(`form${type.charAt(0).toUpperCase() + type.slice(1)}`);
+                form.classList.toggle('hidden');
+            }
 
-        function logout() {
-            clearAuth();
-            window.location.href = 'index.html';
-        }
+            function logout() {
+                clearAuth();
+                window.location.href = 'index.html';
+            }
 
-        async function loadTrilhas() {
-            const response = await fetch(`${API_URL}/trilhas`, {
-                headers: { 'Authorization': `Bearer ${getToken()}` }
-            });
-            const data = await response.json();
-            const container = document.getElementById('trilhas');
+            async function loadTrilhas() {
+                const response = await fetch(`${API_URL}/trilhas`, {
+                    headers: { 'Authorization': `Bearer ${getToken()}` }
+                });
+                const data = await response.json();
+                const container = document.getElementById('trilhas');
 
-            if (data.success && data.data.length > 0) {
-                container.innerHTML = data.data.map(t => `
+                if (data.success && data.data.length > 0) {
+                    container.innerHTML = data.data.map(t => `
                     <div class="item-card">
                         <h3>${t.nome}</h3>
                         <p>${t.descricao.substring(0, 100)}...</p>
@@ -235,74 +249,74 @@
                         </div>
                     </div>
                 `).join('');
-            }
-        }
-
-        async function createTrilha(e) {
-            e.preventDefault();
-            const data = {
-                nome: document.getElementById('tNome').value,
-                descricao: document.getElementById('tDescricao').value,
-                dificuldade: document.getElementById('tDificuldade').value,
-                distancia: parseFloat(document.getElementById('tDistancia').value),
-                duracao: document.getElementById('tDuracao').value,
-                localizacao: document.getElementById('tLocalizacao').value,
-                capacidadeMaxima: parseInt(document.getElementById('tCapacidade').value),
-                horarioFuncionamento: {
-                    abertura: document.getElementById('tAbertura').value,
-                    fechamento: document.getElementById('tFechamento').value
                 }
-            };
+            }
 
-            const response = await fetch(`${API_URL}/trilhas`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${getToken()}`
-                },
-                body: JSON.stringify(data)
-            });
+            async function createTrilha(e) {
+                e.preventDefault();
+                const data = {
+                    nome: document.getElementById('tNome').value,
+                    descricao: document.getElementById('tDescricao').value,
+                    dificuldade: document.getElementById('tDificuldade').value,
+                    distancia: parseFloat(document.getElementById('tDistancia').value),
+                    duracao: document.getElementById('tDuracao').value,
+                    localizacao: document.getElementById('tLocalizacao').value,
+                    capacidadeMaxima: parseInt(document.getElementById('tCapacidade').value),
+                    horarioFuncionamento: {
+                        abertura: document.getElementById('tAbertura').value,
+                        fechamento: document.getElementById('tFechamento').value
+                    }
+                };
 
-            const result = await response.json();
-            if (result.success) {
-                showAlert('Trilha criada!', 'success');
-                toggleForm('trilha');
+                const response = await fetch(`${API_URL}/trilhas`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${getToken()}`
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    showAlert('Trilha criada!', 'success');
+                    toggleForm('trilha');
+                    loadTrilhas();
+                    updateStats();
+                }
+            }
+
+            async function toggleDisp(id, disponivel) {
+                await fetch(`${API_URL}/trilhas/${id}/disponibilidade`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${getToken()}`
+                    },
+                    body: JSON.stringify({ disponivel })
+                });
+                loadTrilhas();
+            }
+
+            async function deleteTrilha(id) {
+                if (!confirm('Deletar trilha?')) return;
+                await fetch(`${API_URL}/trilhas/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${getToken()}` }
+                });
                 loadTrilhas();
                 updateStats();
             }
-        }
 
-        async function toggleDisp(id, disponivel) {
-            await fetch(`${API_URL}/trilhas/${id}/disponibilidade`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${getToken()}`
-                },
-                body: JSON.stringify({ disponivel })
-            });
-            loadTrilhas();
-        }
+            async function loadEventos() {
+                const response = await fetch(`${API_URL}/eventos`, {
+                    headers: { 'Authorization': `Bearer ${getToken()}` }
+                });
+                const data = await response.json();
+                const container = document.getElementById('eventos');
 
-        async function deleteTrilha(id) {
-            if (!confirm('Deletar trilha?')) return;
-            await fetch(`${API_URL}/trilhas/${id}`, {
-                method: 'DELETE',
-                headers: { 'Authorization': `Bearer ${getToken()}` }
-            });
-            loadTrilhas();
-            updateStats();
-        }
-
-        async function loadEventos() {
-            const response = await fetch(`${API_URL}/eventos`, {
-                headers: { 'Authorization': `Bearer ${getToken()}` }
-            });
-            const data = await response.json();
-            const container = document.getElementById('eventos');
-
-            if (data.success && data.data.length > 0) {
-                container.innerHTML = data.data.map(e => `
+                if (data.success && data.data.length > 0) {
+                    container.innerHTML = data.data.map(e => `
                     <div class="item-card">
                         <h3>${e.titulo}</h3>
                         <p>${e.descricao.substring(0, 100)}...</p>
@@ -314,233 +328,275 @@
                         </div>
                     </div>
                 `).join('');
+                }
             }
-        }
 
-        async function createEvento(e) {
-            e.preventDefault();
-            const data = {
-                titulo: document.getElementById('eTitulo').value,
-                descricao: document.getElementById('eDescricao').value,
-                dataInicio: document.getElementById('eDataInicio').value,
-                dataFim: document.getElementById('eDataFim').value,
-                horario: document.getElementById('eHorario').value,
-                local: document.getElementById('eLocal').value,
-                tipo: document.getElementById('eTipo').value,
-                capacidade: parseInt(document.getElementById('eCapacidade').value)
-            };
+            async function createEvento(e) {
+                e.preventDefault();
+                const data = {
+                    titulo: document.getElementById('eTitulo').value,
+                    descricao: document.getElementById('eDescricao').value,
+                    dataInicio: document.getElementById('eDataInicio').value,
+                    dataFim: document.getElementById('eDataFim').value,
+                    horario: document.getElementById('eHorario').value,
+                    local: document.getElementById('eLocal').value,
+                    tipo: document.getElementById('eTipo').value,
+                    capacidade: parseInt(document.getElementById('eCapacidade').value)
+                };
 
-            const response = await fetch(`${API_URL}/eventos`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${getToken()}`
-                },
-                body: JSON.stringify(data)
-            });
+                const response = await fetch(`${API_URL}/eventos`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${getToken()}`
+                    },
+                    body: JSON.stringify(data)
+                });
 
-            const result = await response.json();
-            if (result.success) {
-                showAlert('Evento criado!', 'success');
-                toggleForm('evento');
+                const result = await response.json();
+                if (result.success) {
+                    showAlert('Evento criado!', 'success');
+                    toggleForm('evento');
+                    loadEventos();
+                    updateStats();
+                }
+            }
+
+            function hideEditTrilha() {
+                document.getElementById('formEditTrilha').classList.add('hidden');
+            }
+
+            function hideEditEvento() {
+                document.getElementById('formEditEvento').classList.add('hidden');
+            }
+
+            async function editTrilha(id) {
+                const response = await fetch(`${API_URL}/trilhas/${id}`, {
+                    headers: { 'Authorization': `Bearer ${getToken()}` }
+                });
+                const data = await response.json();
+                const t = data.data;
+
+                document.getElementById('editTrilhaId').value = t._id;
+                document.getElementById('etNome').value = t.nome;
+                document.getElementById('etDificuldade').value = t.dificuldade;
+                document.getElementById('etDistancia').value = t.distancia;
+                document.getElementById('etDuracao').value = t.duracao;
+                document.getElementById('etDescricao').value = t.descricao;
+                document.getElementById('etLocalizacao').value = t.localizacao;
+                document.getElementById('etCapacidade').value = t.capacidadeMaxima;
+                document.getElementById('etAbertura').value = t.horarioFuncionamento.abertura;
+                document.getElementById('etFechamento').value = t.horarioFuncionamento.fechamento;
+
+                document.getElementById('formEditTrilha').classList.remove('hidden');
+                document.getElementById('formEditTrilha').scrollIntoView({ behavior: 'smooth' });
+            }
+
+            async function updateTrilha(e) {
+                e.preventDefault();
+                const id = document.getElementById('editTrilhaId').value;
+                const data = {
+                    nome: document.getElementById('etNome').value,
+                    descricao: document.getElementById('etDescricao').value,
+                    dificuldade: document.getElementById('etDificuldade').value,
+                    distancia: parseFloat(document.getElementById('etDistancia').value),
+                    duracao: document.getElementById('etDuracao').value,
+                    localizacao: document.getElementById('etLocalizacao').value,
+                    capacidadeMaxima: parseInt(document.getElementById('etCapacidade').value),
+                    horarioFuncionamento: {
+                        abertura: document.getElementById('etAbertura').value,
+                        fechamento: document.getElementById('etFechamento').value
+                    }
+                };
+
+                const response = await fetch(`${API_URL}/trilhas/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${getToken()}`
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    showAlert('Trilha atualizada!', 'success');
+                    hideEditTrilha();
+                    loadTrilhas();
+                }
+            }
+
+            async function editEvento(id) {
+                const response = await fetch(`${API_URL}/eventos/${id}`, {
+                    headers: { 'Authorization': `Bearer ${getToken()}` }
+                });
+                const data = await response.json();
+                const e = data.data;
+
+                document.getElementById('editEventoId').value = e._id;
+                document.getElementById('eeTitulo').value = e.titulo;
+                document.getElementById('eeDescricao').value = e.descricao;
+                document.getElementById('eeDataInicio').value = e.dataInicio.split('T')[0];
+                document.getElementById('eeDataFim').value = e.dataFim.split('T')[0];
+                document.getElementById('eeHorario').value = e.horario;
+                document.getElementById('eeLocal').value = e.local;
+                document.getElementById('eeTipo').value = e.tipo;
+                document.getElementById('eeCapacidade').value = e.capacidade;
+
+                document.getElementById('formEditEvento').classList.remove('hidden');
+                document.getElementById('formEditEvento').scrollIntoView({ behavior: 'smooth' });
+            }
+
+            async function updateEvento(e) {
+                e.preventDefault();
+                const id = document.getElementById('editEventoId').value;
+                const data = {
+                    titulo: document.getElementById('eeTitulo').value,
+                    descricao: document.getElementById('eeDescricao').value,
+                    dataInicio: document.getElementById('eeDataInicio').value,
+                    dataFim: document.getElementById('eeDataFim').value,
+                    horario: document.getElementById('eeHorario').value,
+                    local: document.getElementById('eeLocal').value,
+                    tipo: document.getElementById('eeTipo').value,
+                    capacidade: parseInt(document.getElementById('eeCapacidade').value)
+                };
+
+                const response = await fetch(`${API_URL}/eventos/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${getToken()}`
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    showAlert('Evento atualizado!', 'success');
+                    hideEditEvento();
+                    loadEventos();
+                }
+            }
+
+            async function toggleStatus(id, ativo) {
+                await fetch(`${API_URL}/eventos/${id}/status`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${getToken()}`
+                    },
+                    body: JSON.stringify({ ativo })
+                });
+                loadEventos();
+            }
+
+            async function deleteEvento(id) {
+                if (!confirm('Deletar evento?')) return;
+                await fetch(`${API_URL}/eventos/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${getToken()}` }
+                });
                 loadEventos();
                 updateStats();
             }
-        }
 
-        function hideEditTrilha() {
-            document.getElementById('formEditTrilha').classList.add('hidden');
-        }
-
-        function hideEditEvento() {
-            document.getElementById('formEditEvento').classList.add('hidden');
-        }
-
-        async function editTrilha(id) {
-            const response = await fetch(`${API_URL}/trilhas/${id}`, {
-                headers: { 'Authorization': `Bearer ${getToken()}` }
-            });
-            const data = await response.json();
-            const t = data.data;
-
-            document.getElementById('editTrilhaId').value = t._id;
-            document.getElementById('etNome').value = t.nome;
-            document.getElementById('etDificuldade').value = t.dificuldade;
-            document.getElementById('etDistancia').value = t.distancia;
-            document.getElementById('etDuracao').value = t.duracao;
-            document.getElementById('etDescricao').value = t.descricao;
-            document.getElementById('etLocalizacao').value = t.localizacao;
-            document.getElementById('etCapacidade').value = t.capacidadeMaxima;
-            document.getElementById('etAbertura').value = t.horarioFuncionamento.abertura;
-            document.getElementById('etFechamento').value = t.horarioFuncionamento.fechamento;
-
-            document.getElementById('formEditTrilha').classList.remove('hidden');
-            document.getElementById('formEditTrilha').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        async function updateTrilha(e) {
-            e.preventDefault();
-            const id = document.getElementById('editTrilhaId').value;
-            const data = {
-                nome: document.getElementById('etNome').value,
-                descricao: document.getElementById('etDescricao').value,
-                dificuldade: document.getElementById('etDificuldade').value,
-                distancia: parseFloat(document.getElementById('etDistancia').value),
-                duracao: document.getElementById('etDuracao').value,
-                localizacao: document.getElementById('etLocalizacao').value,
-                capacidadeMaxima: parseInt(document.getElementById('etCapacidade').value),
-                horarioFuncionamento: {
-                    abertura: document.getElementById('etAbertura').value,
-                    fechamento: document.getElementById('etFechamento').value
-                }
-            };
-
-            const response = await fetch(`${API_URL}/trilhas/${id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${getToken()}`
-                },
-                body: JSON.stringify(data)
-            });
-
-            const result = await response.json();
-            if (result.success) {
-                showAlert('Trilha atualizada!', 'success');
-                hideEditTrilha();
-                loadTrilhas();
+            async function updateStats() {
+                const [t, e] = await Promise.all([
+                    fetch(`${API_URL}/trilhas`, { headers: { 'Authorization': `Bearer ${getToken()}` } }),
+                    fetch(`${API_URL}/eventos?ativo=true`, { headers: { 'Authorization': `Bearer ${getToken()}` } })
+                ]);
+                const trilhas = await t.json();
+                const eventos = await e.json();
+                document.getElementById('statTrilhas').textContent = trilhas.count || 0;
+                document.getElementById('statEventos').textContent = eventos.count || 0;
             }
-        }
 
-        async function editEvento(id) {
-            const response = await fetch(`${API_URL}/eventos/${id}`, {
-                headers: { 'Authorization': `Bearer ${getToken()}` }
-            });
-            const data = await response.json();
-            const e = data.data;
+            async function loadUsers() {
+                const response = await fetch(`${API_URL}/users`, {
+                    headers: { 'Authorization': `Bearer ${getToken()}` }
+                });
+                const data = await response.json();
 
-            document.getElementById('editEventoId').value = e._id;
-            document.getElementById('eeTitulo').value = e.titulo;
-            document.getElementById('eeDescricao').value = e.descricao;
-            document.getElementById('eeDataInicio').value = e.dataInicio.split('T')[0];
-            document.getElementById('eeDataFim').value = e.dataFim.split('T')[0];
-            document.getElementById('eeHorario').value = e.horario;
-            document.getElementById('eeLocal').value = e.local;
-            document.getElementById('eeTipo').value = e.tipo;
-            document.getElementById('eeCapacidade').value = e.capacidade;
+                if (data.success && data.data.length > 0) {
+                    // Separar admins e visitantes
+                    const admins = data.data.filter(u => u.role === 'admin');
+                    const visitantes = data.data.filter(u => u.role === 'visitante');
 
-            document.getElementById('formEditEvento').classList.remove('hidden');
-            document.getElementById('formEditEvento').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        async function updateEvento(e) {
-            e.preventDefault();
-            const id = document.getElementById('editEventoId').value;
-            const data = {
-                titulo: document.getElementById('eeTitulo').value,
-                descricao: document.getElementById('eeDescricao').value,
-                dataInicio: document.getElementById('eeDataInicio').value,
-                dataFim: document.getElementById('eeDataFim').value,
-                horario: document.getElementById('eeHorario').value,
-                local: document.getElementById('eeLocal').value,
-                tipo: document.getElementById('eeTipo').value,
-                capacidade: parseInt(document.getElementById('eeCapacidade').value)
-            };
-
-            const response = await fetch(`${API_URL}/eventos/${id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${getToken()}`
-                },
-                body: JSON.stringify(data)
-            });
-
-            const result = await response.json();
-            if (result.success) {
-                showAlert('Evento atualizado!', 'success');
-                hideEditEvento();
-                loadEventos();
-            }
-        }
-
-        async function toggleStatus(id, ativo) {
-            await fetch(`${API_URL}/eventos/${id}/status`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${getToken()}`
-                },
-                body: JSON.stringify({ ativo })
-            });
-            loadEventos();
-        }
-
-        async function deleteEvento(id) {
-            if (!confirm('Deletar evento?')) return;
-            await fetch(`${API_URL}/eventos/${id}`, {
-                method: 'DELETE',
-                headers: { 'Authorization': `Bearer ${getToken()}` }
-            });
-            loadEventos();
-            updateStats();
-        }
-
-        async function updateStats() {
-            const [t, e] = await Promise.all([
-                fetch(`${API_URL}/trilhas`, { headers: { 'Authorization': `Bearer ${getToken()}` } }),
-                fetch(`${API_URL}/eventos?ativo=true`, { headers: { 'Authorization': `Bearer ${getToken()}` } })
-            ]);
-            const trilhas = await t.json();
-            const eventos = await e.json();
-            document.getElementById('statTrilhas').textContent = trilhas.count || 0;
-            document.getElementById('statEventos').textContent = eventos.count || 0;
-        }
-
-        async function loadUsers() {
-            const response = await fetch(`${API_URL}/users`, {
-                headers: { 'Authorization': `Bearer ${getToken()}` }
-            });
-            const data = await response.json();
-            const container = document.getElementById('users');
-
-            if (data.success && data.data.length > 0) {
-                container.innerHTML = data.data.map(u => `
-                    <div class="item-card">
-                        <h3>${u.nome}</h3>
-                        <p><strong>Email:</strong> ${u.email}</p>
-                        <p><strong>Tipo:</strong> ${u.role}</p>
-                        ${u.superAdmin ? '<span class="badge badge-warning">Super Admin</span>' : ''}
-                        ${u._id !== userData._id ? `
-                            <div style="margin-top: 1rem;">
-                                <button class="btn btn-small btn-danger" onclick="deleteUser('${u._id}', '${u.role}')">Deletar</button>
-                            </div>
-                        ` : '<p style="margin-top:1rem;color:var(--gray)">Você</p>'}
+                    // Renderizar admins
+                    const adminContainer = document.getElementById('tabAdmins');
+                    adminContainer.innerHTML = admins.length > 0 ? admins.map(u => `
+            <div class="item-card">
+                <h3>${u.nome}</h3>
+                <p><strong>Email:</strong> ${u.email}</p>
+                <p><strong>Tipo:</strong> ${u.superAdmin ? '👑 Super Admin' : 'Admin'}</p>
+                ${u.superAdmin ? '<span class="badge badge-warning">Fundador</span>' : '<span class="badge badge-info">Admin</span>'}
+                ${u._id !== userData._id ? `
+                    <div style="margin-top: 1rem;">
+                        <button class="btn btn-small btn-danger" onclick="deleteUser('${u._id}', '${u.role}', ${u.superAdmin})">Deletar</button>
                     </div>
-                `).join('');
+                ` : '<p style="margin-top:1rem;color:var(--gray)">👤 Você</p>'}
+            </div>
+        `).join('') : '<p>Nenhum admin encontrado.</p>';
+
+                    // Renderizar visitantes
+                    const visitanteContainer = document.getElementById('tabVisitantes');
+                    visitanteContainer.innerHTML = visitantes.length > 0 ? visitantes.map(u => `
+            <div class="item-card">
+                <h3>${u.nome}</h3>
+                <p><strong>Email:</strong> ${u.email}</p>
+                <span class="badge badge-success">Visitante</span>
+                <div style="margin-top: 1rem;">
+                    <button class="btn btn-small btn-danger" onclick="deleteUser('${u._id}', '${u.role}', false)">Deletar</button>
+                </div>
+            </div>
+        `).join('') : '<p>Nenhum visitante encontrado.</p>';
+                }
             }
-        }
 
-        async function deleteUser(id, role) {
-            if (!confirm('Deletar este usuário?')) return;
+            function showUserTab(tab) {
+                // Esconder todas as abas
+                document.getElementById('tabAdmins').style.display = 'none';
+                document.getElementById('tabVisitantes').style.display = 'none';
 
-            const response = await fetch(`${API_URL}/users/${id}`, {
-                method: 'DELETE',
-                headers: { 'Authorization': `Bearer ${getToken()}` }
-            });
+                // Resetar botões
+                document.getElementById('btnAdmins').classList.remove('btn-primary');
+                document.getElementById('btnAdmins').classList.add('btn-secondary');
+                document.getElementById('btnVisitantes').classList.remove('btn-primary');
+                document.getElementById('btnVisitantes').classList.add('btn-secondary');
 
-            const data = await response.json();
-
-            if (data.success) {
-                showAlert('Usuário deletado!', 'success');
-                loadUsers();
-            } else {
-                showAlert(data.message, 'error');
+                // Mostrar aba selecionada
+                if (tab === 'admins') {
+                    document.getElementById('tabAdmins').style.display = 'grid';
+                    document.getElementById('btnAdmins').classList.add('btn-primary');
+                    document.getElementById('btnAdmins').classList.remove('btn-secondary');
+                } else {
+                    document.getElementById('tabVisitantes').style.display = 'grid';
+                    document.getElementById('btnVisitantes').classList.add('btn-primary');
+                    document.getElementById('btnVisitantes').classList.remove('btn-secondary');
+                }
             }
-        }
 
-        init();
-    </script>
+            async function deleteUser(id, role) {
+                if (!confirm('Deletar este usuário?')) return;
+
+                const response = await fetch(`${API_URL}/users/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${getToken()}` }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showAlert('Usuário deletado!', 'success');
+                    loadUsers();
+                } else {
+                    showAlert(data.message, 'error');
+                }
+            }
+            // Mostrar aba de admins por padrão
+            showUserTab('admins');
+            init();
+        </script>
 </body>
 
 </html>

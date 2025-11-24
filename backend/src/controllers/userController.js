@@ -29,19 +29,27 @@ exports.deleteUser = async (req, res) => {
       });
     }
 
-    // Se tentar deletar admin, precisa ser super admin
-    if (userToDelete.role === 'admin' && !req.user.superAdmin) {
-      return res.status(403).json({
-        success: false,
-        message: 'Apenas Super Admins podem deletar outros admins',
-      });
-    }
-
     // Não pode deletar a si mesmo
     if (userToDelete._id.toString() === req.user.id) {
       return res.status(400).json({
         success: false,
         message: 'Você não pode deletar sua própria conta',
+      });
+    }
+
+    // NOVA REGRA: Super Admin NÃO pode deletar outro Super Admin
+    if (userToDelete.superAdmin && req.user.superAdmin) {
+      return res.status(403).json({
+        success: false,
+        message: '🛡️ Super Admins não podem deletar outros Super Admins. Proteção de cofundadores ativada.',
+      });
+    }
+
+    // Se tentar deletar admin comum, precisa ser super admin
+    if (userToDelete.role === 'admin' && !req.user.superAdmin) {
+      return res.status(403).json({
+        success: false,
+        message: 'Apenas Super Admins podem deletar outros admins',
       });
     }
 

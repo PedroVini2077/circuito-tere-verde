@@ -41,6 +41,4 @@ Toda a documentação está em `backend/docs/`:
 **Pedro Vínicios**
 MVP desenvolvido para o desafio Back-End Development - Unidade 1
 
----
-
 **Para começar, acesse:** `backend/README.md`

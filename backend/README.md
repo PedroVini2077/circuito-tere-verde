@@ -7,8 +7,6 @@
 
 API RESTful para gerenciamento de trilhas ecológicas e eventos naturais em Teresópolis/RJ.
 
----
-
 ## 📋 Sobre o Projeto
 
 O **Circuito Terê Verde** é uma plataforma web desenvolvida para promover o turismo ecológico em Teresópolis, facilitando o acesso a informações sobre trilhas e eventos naturais da região. Este MVP (Minimum Viable Product) foca em fornecer uma API robusta e segura para gestão de conteúdo administrativo.
@@ -19,8 +17,6 @@ O **Circuito Terê Verde** é uma plataforma web desenvolvida para promover o tu
 - ✅ Promover eventos relacionados ao turismo ecológico
 - ✅ Fornecer informações atualizadas sobre horários e disponibilidade
 - ✅ Garantir segurança no acesso administrativo
-
----
 
 ## 🚀 Funcionalidades
 
@@ -44,8 +40,6 @@ O **Circuito Terê Verde** é uma plataforma web desenvolvida para promover o tu
 - Controle de ativação/desativação
 - Tipos: palestras, workshops, trilhas guiadas, observações
 
----
-
 ## 🛠️ Tecnologias Utilizadas
 
 - **Node.js** - Ambiente de execução JavaScript
@@ -57,8 +51,6 @@ O **Circuito Terê Verde** é uma plataforma web desenvolvida para promover o tu
 - **Express Validator** - Validação de dados
 - **CORS** - Habilitação de requisições cross-origin
 - **Dotenv** - Gerenciamento de variáveis de ambiente
-
----
 
 ## 📁 Estrutura do Projeto
 ```
@@ -95,8 +87,6 @@ backend/
 ├── package.json                 # Dependências
 └── README.md                    # Este arquivo
 ```
-
----
 
 ## ⚙️ Instalação e Configuração
 
@@ -160,8 +150,6 @@ npm start
 
 O servidor estará rodando em `http://localhost:5000`
 
----
-
 ## 📡 Testando a API
 
 ### Verificar se a API está rodando
@@ -188,8 +176,6 @@ Resposta esperada:
 - **Postman**
 - **Insomnia**
 
----
-
 ## 🔐 Autenticação
 
 A API utiliza **JWT (JSON Web Tokens)** para autenticação.
@@ -203,22 +189,18 @@ A API utiliza **JWT (JSON Web Tokens)** para autenticação.
 Authorization: Bearer seu_token_aqui
 ```
 
----
-
 ## 📚 Principais Endpoints
 
 ### Autenticação
 
-| Método | Endpoint | Descrição | Autenticação |
-|--------|----------|-----------|--------------|
+| Método | Endpoint | Descrição | Autenticação |----|
 | POST | `/api/auth/register` | Registrar novo usuário | Não |
 | POST | `/api/auth/login` | Fazer login | Não |
 | GET | `/api/auth/me` | Obter dados do usuário logado | Sim |
 
 ### Trilhas
 
-| Método | Endpoint | Descrição | Autenticação | Role |
-|--------|----------|-----------|--------------|------|
+| Método | Endpoint | Descrição | Autenticação | Role |---|
 | GET | `/api/trilhas` | Listar todas as trilhas | Não | - |
 | GET | `/api/trilhas/:id` | Obter trilha específica | Não | - |
 | POST | `/api/trilhas` | Criar nova trilha | Sim | Admin |
@@ -228,8 +210,7 @@ Authorization: Bearer seu_token_aqui
 
 ### Eventos
 
-| Método | Endpoint | Descrição | Autenticação | Role |
-|--------|----------|-----------|--------------|------|
+| Método | Endpoint | Descrição | Autenticação | Role |---|
 | GET | `/api/eventos` | Listar todos os eventos | Não | - |
 | GET | `/api/eventos/:id` | Obter evento específico | Não | - |
 | POST | `/api/eventos` | Criar novo evento | Sim | Admin |
@@ -239,8 +220,6 @@ Authorization: Bearer seu_token_aqui
 | PATCH | `/api/eventos/:id/vagas` | Atualizar vagas | Sim | Admin |
 
 **📖 Documentação completa:** Veja o arquivo `docs/API.md`
-
----
 
 ## 🧪 Scripts Disponíveis
 ```bash
@@ -254,8 +233,6 @@ npm start
 npm run seed
 ```
 
----
-
 ## 🔒 Segurança
 
 - ✅ Senhas criptografadas com bcrypt (salt rounds: 10)
@@ -264,8 +241,6 @@ npm run seed
 - ✅ Proteção de rotas administrativas
 - ✅ CORS configurado
 - ✅ Variáveis sensíveis em arquivo .env
-
----
 
 ## 🐛 Tratamento de Erros
 
@@ -286,19 +261,14 @@ A API retorna erros padronizados:
 - `404` - Não encontrado
 - `500` - Erro no servidor
 
----
-
 ## 📝 Variáveis de Ambiente
 
-| Variável | Descrição | Exemplo |
-|----------|-----------|---------|
+| Variável | Descrição | Exemplo |-|
 | `PORT` | Porta do servidor | `5000` |
 | `MONGODB_URI` | String de conexão do MongoDB | `mongodb+srv://...` |
 | `JWT_SECRET` | Chave secreta para JWT | `seu_secret_aqui` |
 | `JWT_EXPIRE` | Tempo de expiração do token | `7d` |
 | `NODE_ENV` | Ambiente de execução | `development` ou `production` |
-
----
 
 ## 📦 Dependências Principais
 ```json
@@ -313,8 +283,6 @@ A API retorna erros padronizados:
 }
 ```
 
----
-
 ## 🤝 Contribuindo
 
 1. Fork o projeto
@@ -323,13 +291,9 @@ A API retorna erros padronizados:
 4. Push para a branch (`git push origin feature/NovaFeature`)
 5. Abra um Pull Request
 
----
-
 ## 📄 Licença
 
 Este projeto está sob a licença MIT.
-
----
 
 ## 👨‍💻 Autor
 
@@ -337,8 +301,6 @@ Este projeto está sob a licença MIT.
 Desenvolvido para o desafio **MVP Back-End Development** - Unidade 1
 
 **Situação-Problema:** Circuito Terê Verde - Turismo ecológico em Teresópolis
-
----
 
 ## 📞 Suporte
 
@@ -348,8 +310,6 @@ Em caso de dúvidas ou problemas:
 2. Consulte os logs do servidor
 3. Teste os endpoints com Thunder Client
 4. Verifique se o MongoDB Atlas está acessível
-
----
 
 ## 🎯 Roadmap (Futuras Melhorias)
 
@@ -361,7 +321,5 @@ Em caso de dúvidas ou problemas:
 - [ ] Relatórios de visitação
 - [ ] Integração com API de clima
 - [ ] Aplicativo mobile
-
----
 
 **🌿 Desenvolvido com 💚 para promover o turismo ecológico sustentável!**

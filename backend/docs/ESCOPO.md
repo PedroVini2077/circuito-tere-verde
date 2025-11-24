@@ -4,8 +4,6 @@
 
 Desenvolver um MVP (Minimum Viable Product) de uma plataforma web para promover o turismo ecológico em Teresópolis, facilitando o acesso a informações sobre trilhas e eventos naturais da região.
 
----
-
 ## ✅ Dentro do Escopo (In Scope)
 
 ### 1. Gestão de Trilhas
@@ -50,8 +48,6 @@ Desenvolver um MVP (Minimum Viable Product) de uma plataforma web para promover 
 - ✅ Documentação da API
 - ✅ Exemplos de uso
 
----
-
 ## ❌ Fora do Escopo (Out of Scope)
 
 ### 1. Sistema de Reservas
@@ -85,8 +81,6 @@ Desenvolver um MVP (Minimum Viable Product) de uma plataforma web para promover 
 - ❌ Aplicativo mobile nativo
 - ❌ PWA (Progressive Web App)
 
----
-
 ## 🎯 Critérios de Sucesso
 
 1. ✅ API funcional e testável
@@ -96,8 +90,6 @@ Desenvolver um MVP (Minimum Viable Product) de uma plataforma web para promover 
 5. ✅ Código versionado no GitHub
 6. ✅ Documentação clara e completa
 7. ✅ Sistema rodando localmente sem erros
-
----
 
 ## 📅 Entregas
 

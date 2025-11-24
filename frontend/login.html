@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Circuito Terê Verde</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <header>
         <div class="header-content">
-            <div class="logo" onclick="window.location.href='index.html'" style="cursor:pointer">🌿 Circuito Terê Verde</div>
+            <div class="logo" onclick="window.location.href='index.html'" style="cursor:pointer">🌿 Circuito Terê Verde
+            </div>
             <div class="nav-buttons">
                 <button onclick="window.location.href='index.html'">Voltar</button>
             </div>
@@ -60,13 +63,9 @@
                 if (data.success) {
                     setToken(data.data.token);
                     showAlert('Login realizado! Redirecionando...', 'success');
-                    
+
                     setTimeout(() => {
-                        if (data.data.role === 'admin') {
-                            window.location.href = 'admin.html';
-                        } else {
-                            window.location.href = 'home.html';
-                        }
+                        window.location.href = 'home.html'; // Todos vão pra home!
                     }, 1500);
                 } else {
                     showAlert(data.message || 'Credenciais inválidas', 'error');
@@ -77,4 +76,5 @@
         }
     </script>
 </body>
+
 </html>
