@@ -9,7 +9,7 @@
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
     "seed": "node src/utils/seed.js",
-    "frontend": "cd ../frontend && npx http-server -p 8080 -a 0.0.0.0",
+    "frontend": "npx http-server ../frontend -p 5500 -a 0.0.0.0 --cors",
     "full": "concurrently \"npm run dev\" \"npm run frontend\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

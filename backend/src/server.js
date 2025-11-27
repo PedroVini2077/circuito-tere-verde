@@ -83,8 +83,8 @@ const server = app.listen(PORT, () => {
   console.log(`\n🚀 Servidor Backend rodando na porta ${PORT}`);
   console.log(`📡 API: http://localhost:${PORT}/api`);
   console.log(`\n🌐 Para acessar o SITE:`);
-  console.log(`   💻 PC: http://localhost:8080`);
-  console.log(`   📱 Mobile: http://10.0.0.21:8080`);
+  console.log(`   💻 PC: http://localhost:5500`);
+  console.log(`   📱 Mobile: http://10.0.0.21:5500`);
   console.log(`\n💡 Use: npm run full (roda backend + frontend)\n`);
 });
 
